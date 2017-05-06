@@ -120,10 +120,12 @@
     <dimen name="font_medium">25sp</dimen>
     <dimen name="font_small">20sp</dimen>
     <dimen name="font_xsmall">18sp</dimen>
-    <dimen name="font_xxsmall">16sp</dimen>
-    <dimen name="font_xxxsmall">14sp</dimen>
-    <dimen name="font_xxxxsmall">12sp</dimen>
-    <dimen name="font_xxxxxsmall">10sp</dimen>
+    <dimen name="font_2xs">16sp</dimen>
+    <dimen name="font_3xs">14sp</dimen>
+    <dimen name="font_4xs">12sp</dimen>
+    <dimen name="font_5xs">10sp</dimen>
+    <dimen name="font_6xs">8sp</dimen>
+    <dimen name="font_7xs">6sp</dimen>
     <dimen name="font_52">42sp</dimen>
 
     <!--keypad -->

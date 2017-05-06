@@ -85,7 +85,7 @@ public class UtilDialog {
         textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.font_xsmall));
 
         if(dialog.getContentView()!= null){
-            dialog.getContentView().setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.font_xxxsmall));
+            dialog.getContentView().setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.font_3xs));
         }
         return dialog;
     }
@@ -139,7 +139,7 @@ public class UtilDialog {
 
 
         if(dialog.getContentView()!= null){
-            dialog.getContentView().setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.font_xxxsmall));
+            dialog.getContentView().setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.font_3xs));
         }
         return dialog;
     }
@@ -160,7 +160,7 @@ public class UtilDialog {
         textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.font_xsmall));
 
         if(dialog.getContentView()!= null){
-            dialog.getContentView().setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.font_xxxsmall));
+            dialog.getContentView().setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.font_3xs));
         }
 
         return dialog;
@@ -261,7 +261,7 @@ public class UtilDialog {
         textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.font_xsmall));
 
         if(dialog.getContentView()!= null){
-            dialog.getContentView().setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.font_xxxsmall));
+            dialog.getContentView().setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.font_3xs));
         }
         return dialog;
     }

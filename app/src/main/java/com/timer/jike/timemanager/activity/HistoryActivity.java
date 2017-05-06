@@ -57,7 +57,7 @@ public class HistoryActivity extends BaseActivity {
             }
         }
         double v = Math.random() * colors.length;
-        return colors[(int) Math.floor(v)];
+        return getResources().getColor(colors[(int) Math.floor(v)]);
     }
 
     @Override

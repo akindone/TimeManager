@@ -168,7 +168,7 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     }
 
     protected String getEventDescription(Event event) {
-        return String.format("%1$s\n%2$s", event.getTitle(), UtilString.getHour(event.getDuration()));
+        return String.format("%1$s/%2$s", event.getTitle(), UtilString.getHour(event.getDuration()));
     }
 
     @Override

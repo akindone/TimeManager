@@ -72,66 +72,27 @@ public class SettingsActivity extends AppCompatActivity {
 
         ColorPicker picker = (ColorPicker) inflate.findViewById(R.id.picker);
         SVBar svBar = (SVBar) inflate.findViewById(R.id.svbar);
-        OpacityBar opacityBar = (OpacityBar) inflate.findViewById(R.id.opacitybar);
-        SaturationBar saturationBar = (SaturationBar) inflate.findViewById(R.id.saturationbar);
-        ValueBar valueBar = (ValueBar) inflate.findViewById(R.id.valuebar);
-
         picker.addSVBar(svBar);
-        picker.addOpacityBar(opacityBar);
-        picker.addSaturationBar(saturationBar);
-        picker.addValueBar(valueBar);
-
-        //To get the color
         pickedColor = picker.getColor();
-
         //To set the old selected color u can do it like this
         picker.setOldCenterColor(picker.getColor());
         picker.setOnColorChangedListener(color -> pickedColor = color);
-
-        //to turn of showing the old color
         picker.setShowOldCenterColor(false);
 
-//        //adding onChangeListeners to bars
-//        opacityBar.setOnOpacityChangedListener(new OpacityBar.OnOpacityChangedListener() {
-//            @Override
-//            public void onOpacityChanged(int opacity) {
-//                pickedColor = color;
-//
-//            }
-//        });
-//        valueBar.setOnValueChangedListener(new ValueBar.OnValueChangedListener() {
-//            @Override
-//            public void onValueChanged(int value) {
-//                pickedColor = color;
-//
-//            }
-//        });
-//        saturationBar.setOnSaturationChangedListener(new SaturationBar.OnSaturationChangedListener() {
-//            @Override
-//            public void onSaturationChanged(int saturation) {
-//                pickedColor = color;
-//
-//            }
-//        });
-
-
-        MaterialDialog.SingleButtonCallback callbackP = new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                if (TextUtils.isEmpty(text.getText().toString())){
-                    Toast.makeText(SettingsActivity.this, "请输入文字", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                ColorRule colorRule = new ColorRule();
-                colorRule.setText(text.getText().toString());
-                colorRule.setColor(pickedColor);
-                UtilDB.getColorRuleDao().insert(colorRule);
-                Toast.makeText(SettingsActivity.this, "创建成功", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-                mList.add(colorRule);
-                mMyRvAdapter.notifyDataSetChanged();
-
+        MaterialDialog.SingleButtonCallback callbackP = (dialog, which) -> {
+            if (TextUtils.isEmpty(text.getText().toString())){
+                Toast.makeText(SettingsActivity.this, "请输入文字", Toast.LENGTH_SHORT).show();
+                return;
             }
+            ColorRule colorRule = new ColorRule();
+            colorRule.setText(text.getText().toString());
+            colorRule.setColor(pickedColor);
+            UtilDB.getColorRuleDao().insert(colorRule);
+            Toast.makeText(SettingsActivity.this, "创建成功", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+            mList.add(colorRule);
+            mMyRvAdapter.notifyDataSetChanged();
+
         };
         UtilDialog.buildDialog(this, "选择颜色", "确定", "取消", callbackP, (dialog, which) -> dialog.dismiss(), inflate, false);
 
@@ -160,11 +121,43 @@ public class SettingsActivity extends AppCompatActivity {
             MyViewHolder holder1 = (MyViewHolder) holder;
             holder1.mivColor.setBackgroundColor(colorRule.getColor());
             holder1.mTvText.setText(colorRule.getText());
-            holder1.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mContext, "敬请期待！", Toast.LENGTH_SHORT).show();
-                }
+            holder1.itemView.setOnClickListener(v -> {
+                View inflate = View.inflate(mContext, R.layout.dialog_color_selector, null);
+
+                EditText text = (EditText) inflate.findViewById(R.id.et_dcs_text);
+                text.setText(colorRule.getText());
+
+                ColorPicker picker = (ColorPicker) inflate.findViewById(R.id.picker);
+                SVBar svBar = (SVBar) inflate.findViewById(R.id.svbar);
+                picker.addSVBar(svBar);
+                picker.setColor(colorRule.getColor());
+                //To set the old selected color u can do it like this
+                picker.setOldCenterColor(picker.getColor());
+                picker.setOnColorChangedListener(color -> pickedColor = color);
+                picker.setShowOldCenterColor(false);
+
+                MaterialDialog.SingleButtonCallback callbackP = (dialog, which) -> {
+                    if (TextUtils.isEmpty(text.getText().toString())){
+                        Toast.makeText(SettingsActivity.this, "请输入文字", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    ColorRule colorRule1 = new ColorRule(colorRule.getId(), text.getText().toString(), pickedColor);
+                    UtilDB.getColorRuleDao().update(colorRule1);
+                    Toast.makeText(SettingsActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    mList.remove(position);
+                    mList.add(position,colorRule1);
+                    mMyRvAdapter.notifyDataSetChanged();
+                };
+
+                MaterialDialog.SingleButtonCallback callbackN = (dialog, which) -> {
+                    UtilDB.getColorRuleDao().delete(colorRule);
+                    mList.remove(position);
+                    mMyRvAdapter.notifyDataSetChanged();
+                    Toast.makeText(SettingsActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                };
+                UtilDialog.buildDialog(mContext, "修改／删除", "修改", "删除", callbackP,callbackN , inflate, false);
             });
         }
 

@@ -5,14 +5,15 @@
               android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_m">
         <TextView
             android:text="文字匹配"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <EditText
             android:id="@+id/et_dcs_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
@@ -26,18 +27,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.larswerkman.holocolorpicker.OpacityBar
-        android:id="@+id/opacitybar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <!--<com.larswerkman.holocolorpicker.OpacityBar-->
+        <!--android:id="@+id/opacitybar"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"/>-->
 
-    <com.larswerkman.holocolorpicker.SaturationBar
-        android:id="@+id/saturationbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <!--<com.larswerkman.holocolorpicker.SaturationBar-->
+        <!--android:id="@+id/saturationbar"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"/>-->
 
-    <com.larswerkman.holocolorpicker.ValueBar
-        android:id="@+id/valuebar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <!--<com.larswerkman.holocolorpicker.ValueBar-->
+        <!--android:id="@+id/valuebar"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"/>-->
 </LinearLayout>

@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
     void onClickStop() {
         isStop = true;
         Date stopTime = new Date();
-        stopTime.setTime(new Date().getTime()+1000*300);
         Event event = new Event();
         event.setBegin_time(mStartTime);
         event.setTitle(mTvTitle.getText().toString());
@@ -123,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         mBtnStart.setEnabled(true);
         mBtnStop.setEnabled(false);
 
-        mTvDuration.setText("0");
         mSubscription.unsubscribe();
 
     }

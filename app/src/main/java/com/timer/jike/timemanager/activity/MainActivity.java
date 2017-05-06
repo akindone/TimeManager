@@ -127,6 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_ma_history)
     void onClickHistory(){
-
+        startActivity(new Intent(this, BasicActivity.class));
     }
 }

@@ -71,5 +71,7 @@ dependencies {
 
     compile 'com.afollestad.material-dialogs:core:0.9.4.4'
 
+    compile 'com.github.alamkanak:android-week-view:1.2.6'
+
     testCompile 'junit:junit:4.12'
 }

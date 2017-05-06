@@ -136,6 +136,6 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_ma_settings)
     void onClickSettings(){
-        startActivity(new Intent(this, HistoryActivity.class));
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 }

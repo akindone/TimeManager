@@ -248,7 +248,7 @@
     <!--dialog custom wechat qrcode-->
     <dimen name="size_dcwq_qrcode">200dp</dimen>
     <!--cardview couponTitle tracker-->
-    <dimen name="width_cpt_iv">2dp</dimen>
+    <dimen name="width_cpt_iv">4dp</dimen>
     <!--dialog history couponTitle content-->
     <dimen name="margin_dhpc_root">-2dp</dimen>
     <!--fragment member info header bar-->

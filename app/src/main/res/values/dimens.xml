@@ -1,0 +1,289 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="margin_nxl">50dp</dimen>
+    <dimen name="margin_7xl">32dp</dimen>
+    <dimen name="margin_6xl">30dp</dimen>
+    <dimen name="margin_5xl">28dp</dimen>
+    <dimen name="margin_4xl">26dp</dimen>
+    <dimen name="margin_3xl">24dp</dimen>
+    <dimen name="margin_2xl">22dp</dimen>
+    <dimen name="margin_1xl">20dp</dimen>
+    <dimen name="margin_l">18dp</dimen>
+    <dimen name="margin_m">16dp</dimen>
+    <dimen name="margin_s">14dp</dimen>
+    <dimen name="margin_1xs">12dp</dimen>
+    <dimen name="margin_2xs">10dp</dimen>
+    <dimen name="margin_3xs">8dp</dimen>
+    <dimen name="margin_4xs">6dp</dimen>
+    <dimen name="margin_5xs">4dp</dimen>
+    <dimen name="margin_6xs">2dp</dimen>
+    <dimen name="margin_8xs">-2dp</dimen>
+
+    <dimen name="padding_nxl">50dp</dimen>
+    <dimen name="padding_5xl">28dp</dimen>
+    <dimen name="padding_3xl">24dp</dimen>
+    <dimen name="padding_2xl">22dp</dimen>
+    <dimen name="padding_1xl">20dp</dimen>
+    <dimen name="padding_m">16dp</dimen>
+    <dimen name="padding_1xs">12dp</dimen>
+    <dimen name="padding_2xs">10dp</dimen>
+    <dimen name="padding_3xs">8dp</dimen>
+    <dimen name="padding_5xs">4dp</dimen>
+    <dimen name="padding_6xs">2dp</dimen>
+
+    <dimen name="radius_card_view">2dp</dimen>
+    <dimen name="radius_card_view_large">6dp</dimen>
+
+    <dimen name="elevation_xlarge">4dp</dimen>
+    <dimen name="elevation_medium">2dp</dimen>
+
+    <dimen name="shadow_medium">4dp</dimen>
+    <dimen name="shadow_large">8dp</dimen>
+
+    <dimen name="indicator_height_tab_small">2dp</dimen>
+    <dimen name="indicator_height_tab_middle">3dp</dimen>
+    <dimen name="indicator_height_tab">4dp</dimen>
+    <dimen name="separator_height_large">1dp</dimen>
+    <dimen name="separator_height">0.5dp</dimen>
+    <dimen name="separator_dash_width">5dp</dimen>
+    <dimen name="separator_dash_gap">2dp</dimen>
+    <dimen name="height_separator_dash">20dp</dimen>
+
+    <dimen name="line_space_extra_m">12dp</dimen>
+    <dimen name="line_space_extra_s">6dp</dimen>
+
+    <dimen name="icon_size_xlarge">64dp</dimen>
+    <dimen name="icon_size_large">40dp</dimen>
+    <dimen name="icon_size_medium">30dp</dimen>
+    <dimen name="icon_size_small">26dp</dimen>
+    <dimen name="icon_size_xsmall">20dp</dimen>
+    <dimen name="icon_size_5xs">18dp</dimen>
+    <dimen name="icon_size_6xs">16dp</dimen>
+    <dimen name="icon_size_8xs">12dp</dimen>
+    <dimen name="icon_size_xxsmall">10dp</dimen>
+    <dimen name="icon_size_wifi">22dp</dimen>
+
+    <dimen name="size_0">0dp</dimen>
+    <dimen name="size_progress_bar_xsmall">16dp</dimen>
+    <dimen name="size_progress_bar_small">30dp</dimen>
+    <dimen name="size_progress_bar_middle">48dp</dimen>
+    <dimen name="size_progress_bar_large">64dp</dimen>
+
+    <dimen name="height_button_medium">60dp</dimen>
+    <dimen name="height_button_small">40dp</dimen>
+    <dimen name="height_button_xs">36dp</dimen>
+
+    <dimen name="height_card_view">80dp</dimen>
+    <dimen name="height_card_view_small">50dp</dimen>
+
+    <dimen name="menu_drop_down_offset">4dp</dimen>
+    <dimen name="menu_width">100dp</dimen>
+
+    <dimen name="height_horizontal_progress_bar">4dp</dimen>
+
+    <dimen name="width_button_small">60dp</dimen>
+    <dimen name="width_button_m">80dp</dimen>
+    <dimen name="width_button_large">110dp</dimen>
+
+    <dimen name="width_stroke">1dp</dimen>
+
+    <item name="history_weight_bill_id" format="float" type="dimen">1.3</item>
+    <item name="history_weight_bill_type" format="float" type="dimen">1</item>
+    <item name="history_weight_bill_amount" format="float" type="dimen">1</item>
+
+    <item name="history_weight_prepay_time" format="float" type="dimen">1.2</item>
+    <item name="history_weight_prepay_type" format="float" type="dimen">1.2</item>
+    <item name="history_weight_prepay_amount" format="float" type="dimen">1.5</item>
+    <item name="history_weight_prepay_phone" format="float" type="dimen">1.7</item>
+
+    <item name="history_weight_point_time" format="float" type="dimen">1</item>
+    <item name="history_weight_point_type" format="float" type="dimen">1</item>
+    <item name="history_weight_point_amount" format="float" type="dimen">1.1</item>
+    <item name="history_weight_point_phone" format="float" type="dimen">1.4</item>
+
+    <item name="history_weight_gift_card_num" format="float" type="dimen">2.1</item>
+    <item name="history_weight_gift_card_amount" format="float" type="dimen">1.3</item>
+    <item name="history_weight_gift_card_time" format="float" type="dimen">0.6</item>
+
+    <item name="history_weight_hui_pay_num" format="float" type="dimen">1.7</item>
+    <item name="history_weight_hui_pay_amount" format="float" type="dimen">1.5</item>
+    <item name="history_weight_hui_pay_time" format="float" type="dimen">1</item>
+
+    <!--font size -->
+    <dimen name="font_xxxlarge">52sp</dimen>
+    <dimen name="font_xxlarge">36sp</dimen>
+    <dimen name="font_xlarge">32sp</dimen>
+    <dimen name="font_large">28sp</dimen>
+    <dimen name="font_medium">25sp</dimen>
+    <dimen name="font_small">20sp</dimen>
+    <dimen name="font_xsmall">18sp</dimen>
+    <dimen name="font_xxsmall">16sp</dimen>
+    <dimen name="font_xxxsmall">14sp</dimen>
+    <dimen name="font_xxxxsmall">12sp</dimen>
+    <dimen name="font_xxxxxsmall">10sp</dimen>
+    <dimen name="font_52">42sp</dimen>
+
+    <!--keypad -->
+    <dimen name="keypad_key_height">54dp</dimen>
+    <dimen name="keypad_key_numbers_size">@dimen/keypad_key_numbers_default_size</dimen>
+    <dimen name="keypad_key_numbers_default_size">@dimen/font_xlarge</dimen>
+    <dimen name="keypad_key_letters_size">12sp</dimen>
+    <dimen name="keypad_key_number_margin_bottom">@dimen/keypad_key_number_default_margin_bottom
+    </dimen>
+    <dimen name="keypad_key_number_default_margin_bottom">0dp</dimen>
+    <dimen name="keypad_operator_height">50dp</dimen>
+    <!--old is 3dp-->
+
+    <!--checkbox for pay-->
+    <dimen name="width_checkbox_stroke">1dp</dimen>
+
+    <dimen name="toolbar_height">42dp</dimen>
+    <dimen name="dialog_pay_method_height">@dimen/keypad_key_height</dimen>
+    <!--dash board activity-->
+    <dimen name="margin_da_container">192dp</dimen>
+    <dimen name="margin_da_btn">20dp</dimen>
+    <dimen name="margin_da_ll">11dp</dimen>
+    <dimen name="height_da_tab">52dp</dimen>
+    <dimen name="height_da_container">200dp</dimen>
+    <dimen name="height_da_pay">70dp</dimen>
+    <dimen name="width_da_space">5dp</dimen>
+    <!--history activity-->
+    <dimen name="height_ha_tab">36dp</dimen>
+    <dimen name="height_ha_title">34dp</dimen>
+    <dimen name="height_ha_search">36dp</dimen>
+    <dimen name="height_history_type_item">60dp</dimen>
+    <dimen name="height_rihs_item">42dp</dimen>
+    <dimen name="max_width_rihs_right_small">60dp</dimen>
+    <dimen name="max_width_rihs_right_long">100dp</dimen>
+    <dimen name="max_width_rihs_middle_small">40dp</dimen>
+    <dimen name="max_width_rihs_middle_long">100dp</dimen>
+    <dimen name="width_rihs_arrow">8dp</dimen>
+    <dimen name="height_rihs_arrow">5dp</dimen>
+    <dimen name="height_rihs_hide_item">20dp</dimen>
+    <dimen name="height_rihs_hide_item_large">26dp</dimen>
+    <dimen name="padding_bottom_rihs_hide_item">8dp</dimen>
+
+    <!--history bill detail activity-->
+    <dimen name="height_hbda_btn">40dp</dimen>
+    <dimen name="height_hbda_title">30dp</dimen>
+    <!--member info activity-->
+    <dimen name="size_mia_avatar">56dp</dimen>
+    <dimen name="margin_mia_modify">50dp</dimen>
+    <dimen name="width_mia_modify">90dp</dimen>
+    <dimen name="width_mia_modify_cv">160dp</dimen>
+    <dimen name="width_mia_operator">15dp</dimen>
+    <dimen name="height_mia_modify_cv">38dp</dimen>
+    <dimen name="height_mia_modify_title">39dp</dimen>
+    <dimen name="height_mia_modify">40dp</dimen>
+    <dimen name="width_mia_member_favor">200dp</dimen>
+    <dimen name="width_mia_arrow_right">5dp</dimen>
+    <dimen name="height_mia_arrow_right">10dp</dimen>
+    <!--pay activity-->
+    <dimen name="padding_pa_reward">100dp</dimen>
+    <dimen name="width_promotion">230dp</dimen>
+    <dimen name="width_icon_money">20dp</dimen>
+    <dimen name="height_promotion">40dp</dimen>
+    <!--pay check in activity-->
+    <dimen name="size_pcia_qrcode">180dp</dimen>
+    <dimen name="height_pcia_hint">32dp</dimen>
+    <dimen name="height_pcia_phone_title">40dp</dimen>
+    <dimen name="margin_pcia_phone">60dp</dimen>
+    <dimen name="width_pcia_pin">150dp</dimen>
+    <dimen name="width_pcia_resend">100dp</dimen>
+    <dimen name="width_pcia_tab">150dp</dimen>
+    <!--pay result activity-->
+    <dimen name="height_pra_trans_fail">48dp</dimen>
+    <dimen name="width_pra_retry">100dp</dimen>
+    <dimen name="min_width_pra_detail_title">80dp</dimen>
+    <dimen name="max_width_pra_detail_title">220dp</dimen>
+    <dimen name="margin_pra_icon">38dp</dimen>
+    <!--prepay activity-->
+    <dimen name="height_ppa_prepay_hint">64dp</dimen>
+    <!--prepay result activity-->
+    <dimen name="width_ppra_retry">100dp</dimen>
+    <dimen name="height_ppra_trans_fail">48dp</dimen>
+
+    <!--scan activity-->
+    <dimen name="width_sa_rect">200dp</dimen>
+    <dimen name="height_sa_qrcode">140dp</dimen>
+    <dimen name="height_sa_toolbar">56dp</dimen>
+    <dimen name="border_sa_qrcode">1dp</dimen>
+    <dimen name="size_sa_corner_length">20dp</dimen>
+    <dimen name="size_sa_corner_size">3dp</dimen>
+    <dimen name="size_sa_scan_line">1dp</dimen>
+    <dimen name="offset_sa_top">50dp</dimen>
+    <dimen name="margin_sa_button">60dp</dimen>
+    <dimen name="margin_sa_tv">45dp</dimen>
+    <dimen name="margin_ppra_progress">38dp</dimen>
+    <!--toolbar-->
+    <dimen name="max_width_toolbar">220dp</dimen>
+    <!--dialog cumsom content-->
+    <dimen name="size_dcc_add">52dp</dimen>
+    <dimen name="margin_dcc_root">-2dp</dimen>
+    <dimen name="height_dcc_line">4dp</dimen>
+    <!--history prepay detail activity-->
+    <dimen name="height_hppda_tv">30dp</dimen>
+    <!--loginPos activity-->
+    <dimen name="width_la_logo">50dp</dimen>
+    <dimen name="width_la_container">320dp</dimen>
+    <dimen name="height_la_fl">150dp</dimen>
+    <dimen name="height_la_logo">22dp</dimen>
+    <dimen name="height_la_container">151dp</dimen>
+    <dimen name="margin_la_logo">80dp</dimen>
+    <!--card view ap tracker-->
+    <dimen name="width_cat_root">230dp</dimen>
+    <dimen name="height_cat_root">40dp</dimen>
+    <dimen name="padding_cat_tracker">1dp</dimen>
+    <dimen name="size_cat_check_box">20dp</dimen>
+    <!--cardview dash-->
+    <dimen name="margin_cd_ll">5dp</dimen>
+    <dimen name="margin_cd_right_ll">100dp</dimen>
+    <dimen name="width_cd_redeem">100dp</dimen>
+    <dimen name="height_cg_card">64dp</dimen>
+    <!--cardview member growth-->
+    <dimen name="size_cmg_dot">18dp</dimen>
+    <!--dialog custom wechat qrcode-->
+    <dimen name="size_dcwq_qrcode">200dp</dimen>
+    <!--cardview couponTitle tracker-->
+    <dimen name="width_cpt_iv">2dp</dimen>
+    <!--dialog history couponTitle content-->
+    <dimen name="margin_dhpc_root">-2dp</dimen>
+    <!--fragment member info header bar-->
+    <dimen name="padding_fmihb_root">5dp</dimen>
+    <!--fragment secret keypad-->
+    <dimen name="height_fsk_pwd">50dp</dimen>
+    <dimen name="width_fsk_pwd">140dp</dimen>
+    <dimen name="width_fsk_id">70dp</dimen>
+    <dimen name="margin_fsk_processor">64dp</dimen>
+    <!--bg radius dashline-->
+    <dimen name="width_shape_stroke">1dp</dimen>
+    <dimen name="dash_width_shape">4dp</dimen>
+    <dimen name="dash_gap_shape">2dp</dimen>
+    <!--btn shape-->
+    <dimen name="padding_top">3dp</dimen>
+    <!--loginPos edit cursor-->
+    <dimen name="width_lec_shape">2dp</dimen>
+    <!--fragment history content-->
+    <dimen name="height_fhc_current_date">16dp</dimen>
+    <!--pay method activity-->
+    <dimen name="width_pma_swith_min">40dp</dimen>
+    <item name="scale_pma_switch" format="float" type="dimen">1</item>
+    <!--gift card activity-->
+    <dimen name="width_gca_rect">300dp</dimen>
+    <dimen name="margin_top_gca_hint">270dp</dimen>
+    <!--gift card info activity-->
+    <dimen name="height_gcia_bottom_bar">60dp</dimen>
+    <dimen name="width_gcia_pay_btn">100dp</dimen>
+    <dimen name="height_gcia_pay_btn">40dp</dimen>
+    <dimen name="width_gcia_card">290dp</dimen>
+    <dimen name="height_gcia_card">150dp</dimen>
+    <dimen name="width_gcia_activate_status">50dp</dimen>
+    <dimen name="height_gcia_activiate_status">17dp</dimen>
+    <dimen name="width_gcia_promotion">250dp</dimen>
+    <dimen name="width_gcia_card_svg">202dp</dimen>
+
+
+</resources>

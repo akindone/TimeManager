@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/tv_ma_title"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="标签"/>
+
+    <TextView
+        android:id="@+id/tv_ma_duration"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:textSize="@dimen/font_large"
+        android:text="time"/>
+
+    <Button
+        android:id="@+id/btn_ma_start"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="开始"/>
+    <!--<Button-->
+        <!--android:id="@+id/tv_ma_pause"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:text="暂停"/>-->
+    <Button
+        android:id="@+id/btn_ma_stop"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:enabled="false"
+        android:text="结束"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_ma_history"
+            android:layout_width="@dimen/size_0"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="历史"/>
+    </LinearLayout>
+</LinearLayout>
+

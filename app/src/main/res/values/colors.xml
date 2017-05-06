@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary_">#3F51B5</color>
+    <color name="colorPrimaryDark_">#303F9F</color>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#ff62afff</color>
+
+    <color name="brand_color_blue">#ff62afff</color>
+    <color name="brand_color_blue_light">#EBF5FF</color>
+    <color name="brand_color_blue_80">#ff7db8ff</color>
+    <color name="brand_color_blue_trans">#cb62afff</color>
+    <color name="red_growth">#ffe74559</color>
+    <!--<color name="brand_color">#ff6233b4</color>
+        <color name="brand_color_80">#cc6233b4</color>-->
+    <color name="brand_second_color">#ff58d1c8</color>
+    <color name="btn_pressed_color">#ffebebeb</color>
+    <color name="transparent">#00000000</color>
+    <color name="dark_full">#ff000000</color>
+    <color name="dark_holo">#b2000000</color>
+    <color name="dark_medium">#7f000000</color>
+    <color name="dark_light">#4c000000</color>
+    <color name="dark_light_light">#32000000</color>
+    <color name="dark_light_line">#26000000</color>
+    <color name="white">#ffffffff</color>
+    <color name="white_80">#ccffffff</color>
+    <color name="white_growth">#fff9f9f9</color>
+    <color name="white_background">#eaeaea</color>
+    <color name="white_medium">#b2ffffff</color>
+    <color name="white_40">#66ffffff</color>
+    <color name="white_20">#33ffffff</color>
+    <color name="white_title_background">#f2f2f2</color>
+
+    <color name="ad_checkIn">#FF9A73EE</color>
+    <color name="ad_bill">#FFF37730</color>
+    <color name="ad_settlement">#FF43CAC3</color>
+    <color name="ad_inquire">#FFFFBE3D</color>
+
+    <color name="ami_promotion">#FF80B7FF</color>
+    <color name="ami_reward">#FF74D938</color>
+    <color name="ami_growth">#FFEA5C3A</color>
+    <color name="ami_milestone">#FFFFBE3D</color>
+
+    <color name="ap_dark_light">#FF333544</color>
+    <color name="ap_cardview_dark_light">#15ffffff</color>
+    <color name="ap_checkbox_circle">#838383</color>
+
+    <!-- keypad color-->
+    <color name="keypad_theme_color">#0288d1</color>
+    <color name="keypad_theme_color_dark">#0277bd</color>
+    <color name="background_keypad">#fcfcfc</color>
+    <color name="background_keypad_pressed">#ececec</color>
+    <color name="keypad_primary_text_color">@color/dark_holo</color>
+    <color name="keypad_secondary_text_color">#737373</color>
+    <color name="keypad_digits_text_color">#333</color>
+    <color name="keypad_separator_line_color">#c9c9c9</color>
+    <color name="keypad_separator_line_color_lighter">#dfdfdf</color>
+    <color name="keypad_icon_tint">#b3b3b3</color>
+    <!-- end -->
+    <color name="btn_pressed_blue">#417cc6</color>
+    <color name="gift_card_bg_purple">#8A78D1</color>
+    <color name="green_sub">#0f8100</color>
+
+
+</resources>

@@ -8,12 +8,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.timer.jike.timemanager.App;
 import com.timer.jike.timemanager.R;
 import com.timer.jike.timemanager.bean.DaoSession;
 import com.timer.jike.timemanager.bean.Event;
 import com.timer.jike.timemanager.bean.EventDao;
 import com.timer.jike.timemanager.service.AutoLockService;
+import com.timer.jike.timemanager.utils.UtilDB;
 import com.timer.jike.timemanager.utils.UtilDialog;
 import com.timer.jike.timemanager.utils.UtilLog;
 import com.timer.jike.timemanager.utils.UtilString;
@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.btn_ma_start) Button mBtnStart;
     @BindView(R.id.btn_ma_stop) Button mBtnStop;
     @BindView(R.id.btn_ma_history) Button mBtnHistory;
+    @BindView(R.id.btn_ma_settings) Button mBtnSettings;
+
     private Date mStartTime;
     private EventDao mEventDao;
     private boolean isStop;
@@ -63,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(this, AutoLockService.class));
 
         // get the note DAO
-        DaoSession daoSession = ((App) getApplication()).getDaoSession();
-        mEventDao = daoSession.getEventDao();
+        DaoSession daoSession = UtilDB.getDaoSession();
+        mEventDao = UtilDB.getEventDao();
     }
 
     @Override
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         mTvDuration.setText(UtilString.getTimeSpan(0));
         mStartTime = new Date();
         mBtnStart.setEnabled(false);
-        mBtnStart.setEnabled(true);
+        mBtnStop.setEnabled(true);
         mSubscription = Observable
                 .interval(1, TimeUnit.SECONDS)
                 .takeUntil(aLong -> isStop)
@@ -109,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
     void onClickStop() {
         isStop = true;
         Date stopTime = new Date();
+        stopTime.setTime(new Date().getTime()+1000*300);
         Event event = new Event();
         event.setBegin_time(mStartTime);
         event.setTitle(mTvTitle.getText().toString());
@@ -127,6 +130,12 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_ma_history)
     void onClickHistory(){
-        startActivity(new Intent(this, BasicActivity.class));
+        startActivity(new Intent(this, HistoryActivity.class));
+    }
+
+
+    @OnClick(R.id.btn_ma_settings)
+    void onClickSettings(){
+        startActivity(new Intent(this, HistoryActivity.class));
     }
 }

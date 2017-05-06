@@ -7,6 +7,8 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by jike on 2017/5/6.
  */
@@ -65,5 +67,19 @@ public class UtilString {
         }
         return spannableString;
 
+    }
+
+    public static String getHour(long duration) {
+        if (duration < 0)
+            return "--";
+        DecimalFormat decimalFormat = new DecimalFormat("0.0");
+        DecimalFormat decimalFormat2 = new DecimalFormat("0");
+        double seconds = duration / 1000.00;
+        if (seconds / 3600 >= 1) {
+            return decimalFormat.format(seconds / 3600) + "h";
+        } else if (seconds / 60 >= 1) {
+            return decimalFormat.format(seconds / 60) + "min";
+        } else
+            return decimalFormat2.format(seconds) + "s";
     }
 }

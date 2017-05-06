@@ -59,6 +59,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="历史"/>
+        <Button
+            android:id="@+id/btn_ma_settings"
+            android:layout_width="@dimen/size_0"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="设置"/>
     </LinearLayout>
 </LinearLayout>
 

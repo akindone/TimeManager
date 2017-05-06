@@ -86,6 +86,18 @@ public class Event {
     public void setDuration(long duration) {
         this.duration = duration;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", begin_time=" + begin_time +
+                ", end_time=" + end_time +
+                ", title='" + title + '\'' +
+                ", detail='" + detail + '\'' +
+                ", duration=" + duration +
+                '}';
+    }
 }
 
 

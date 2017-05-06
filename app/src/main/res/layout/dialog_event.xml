@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_xxxsmall"
+            android:text="标题"/>
+        <EditText
+            android:id="@+id/tv_de_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="标题"
+            android:enabled="false"
+            android:textStyle="bold"
+            android:textSize="@dimen/font_xxxsmall"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_xxxsmall"
+            android:text="标题"/>
+        <EditText
+            android:id="@+id/tv_de_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请做个具体描述吧！"
+            android:enabled="false"
+            android:textSize="@dimen/font_xxxsmall"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_xxxsmall"
+            android:text="耗时"/>
+        <EditText
+            android:id="@+id/tv_de_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:textSize="@dimen/font_xxxsmall"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_xxxsmall"
+            android:text="开始于"/>
+        <EditText
+            android:id="@+id/tv_de_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:textSize="@dimen/font_xxxsmall"
+            android:hint="日期格式：yyyy-MM-dd hh:mm:ss"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_xxxsmall"
+            android:text="结束于"/>
+
+        <EditText
+            android:id="@+id/tv_de_end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:textSize="@dimen/font_xxxsmall"
+            android:text="日期格式：yyyy-MM-dd hh:mm:ss"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_de_cal_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="计算耗时"
+        android:visibility="gone"/>
+
+</LinearLayout>

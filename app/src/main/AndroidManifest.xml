@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.BasicActivity"
+        <activity android:name=".activity.HistoryActivity"
             android:label="@string/title_activity_basic"/>
 
         <service android:name=".service.AutoLockService"/>

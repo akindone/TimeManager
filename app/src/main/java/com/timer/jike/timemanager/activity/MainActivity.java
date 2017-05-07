@@ -1,7 +1,9 @@
 package com.timer.jike.timemanager.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.WindowManager;
@@ -9,14 +11,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.timer.jike.timemanager.R;
-import com.timer.jike.timemanager.bean.DaoSession;
 import com.timer.jike.timemanager.bean.Event;
-import com.timer.jike.timemanager.bean.EventDao;
 import com.timer.jike.timemanager.service.AutoLockService;
 import com.timer.jike.timemanager.utils.UtilBmob;
 import com.timer.jike.timemanager.utils.UtilDB;
 import com.timer.jike.timemanager.utils.UtilDialog;
 import com.timer.jike.timemanager.utils.UtilLog;
+import com.timer.jike.timemanager.utils.UtilSP;
 import com.timer.jike.timemanager.utils.UtilString;
 
 import java.util.Date;
@@ -31,10 +32,13 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends AppCompatActivity {
     private static String TAG;
-    private static final String TITLE = "标签";
+    private static final String EVENT_START_TIME = "EVENT_START_TIME";
+    private static final String EVENT_TITLE = "EVENT_TITLE";
+    private static final String TITLE_DEFAULT = "标签";
 
 
     private static final String LOCK_TAG = null;
+
     @BindView(R.id.tv_ma_title) TextView mTvTitle;
     @BindView(R.id.tv_ma_duration) TextView mTvDuration;
     @BindView(R.id.btn_ma_start) Button mBtnStart;
@@ -43,34 +47,38 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.btn_ma_settings) Button mBtnSettings;
 
     private Date mStartTime;
-    private boolean isStop;
     private Subscription mSubscription;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UtilLog.d(TAG,"------onCreate");
         TAG = getLocalClassName();
-
-//        WindowManager.LayoutParams
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS,
-//                WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-//        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-//        KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock(LOCK_TAG);
-//        keyguardLock.disableKeyguard();
         startService(new Intent(this, AutoLockService.class));
+
+        restoreUnfinishedEvent();
+
         //检查自动更新
         UtilBmob.update(this);
+    }
+
+    private void restoreUnfinishedEvent() {
+        long lastStartTime = UtilSP.getSPSetting(this).getLong(UtilSP.EVENT_START_TIME, -1);
+        if (lastStartTime != -1){
+            mStartTime = new Date(lastStartTime);
+            startCount(mStartTime);
+        }
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        UtilLog.d(TAG, "onWindowFocusChanged", hasFocus);
+        UtilLog.d(TAG, "------onWindowFocusChanged", hasFocus);
         if (!hasFocus) {
             Intent intent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             intent.putExtra("reason", "globalactions");//可避免关机对话框被关闭
@@ -78,9 +86,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        UtilLog.d(TAG,"------onSaveInstanceState");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UtilLog.d(TAG,"------onDestroy");
+        if (mSubscription != null) mSubscription.unsubscribe();
+        saveUnFinishedEvent();
+    }
+
+    private void saveUnFinishedEvent() {
+        if (mStartTime != null){
+           UtilSP.getSPSetting(this).edit().putLong(UtilSP.EVENT_START_TIME, mStartTime.getTime()).apply();
+        }
+    }
+
     @OnClick(R.id.tv_ma_title)
     void onClickTitle() {
-        UtilDialog.inputDialog(this, TITLE, null, null, null, (dialog, input) -> {
+        UtilDialog.inputDialog(this, TITLE_DEFAULT, null, null, null, (dialog, input) -> {
             if (!TextUtils.isEmpty(input))
                 mTvTitle.setText(input);
         });
@@ -88,40 +124,41 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_ma_start)
     void onClickStart() {
-        isStop = false;
-        mTvDuration.setText(UtilString.getTimeSpan(0));
         mStartTime = new Date();
+        UtilSP.getSPSetting(this).edit().putLong(UtilSP.EVENT_START_TIME, mStartTime.getTime()).apply();
+        startCount(mStartTime);
+    }
+
+    private void startCount(Date startTime) {
+        long lastCount = (new Date().getTime() - startTime.getTime())/1000;
         mBtnStart.setEnabled(false);
         mBtnStop.setEnabled(true);
         mSubscription = Observable
                 .interval(1, TimeUnit.SECONDS)
-                .takeUntil(aLong -> isStop)
+                .takeUntil(aLong -> mStartTime == null)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
-                    UtilLog.d(TAG, "interval", aLong);
-                    mTvDuration.setText(UtilString.getTimeSpan(aLong+1));
+                    UtilLog.d(TAG, "interval",lastCount, aLong);
+                    mTvDuration.setText(UtilString.getTimeSpan(aLong+lastCount+1));
                 });
-
-
     }
 
     @OnClick(R.id.btn_ma_stop)
     void onClickStop() {
-        isStop = true;
         Date stopTime = new Date();
         Event event = new Event();
         event.setBegin_time(mStartTime);
         event.setTitle(mTvTitle.getText().toString());
         event.setEnd_time(stopTime);
         event.setDuration(stopTime.getTime() - mStartTime.getTime());
-
         UtilDB.getEventDao().insert(event);
         UtilLog.d(TAG, "insert", event.getId());
+
         mBtnStart.setEnabled(true);
         mBtnStop.setEnabled(false);
-
         mSubscription.unsubscribe();
-
+        UtilSP.getSPSetting(this).edit().putLong(UtilSP.EVENT_START_TIME,-1).apply();
+        mStartTime = null;
     }
 
     @OnClick(R.id.btn_ma_history)
@@ -134,4 +171,5 @@ public class MainActivity extends AppCompatActivity {
     void onClickSettings(){
         startActivity(new Intent(this, SettingsActivity.class));
     }
+
 }

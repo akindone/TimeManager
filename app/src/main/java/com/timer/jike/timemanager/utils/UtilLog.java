@@ -16,8 +16,8 @@ public class UtilLog {
 
 
     private static void v(int priority, String tag, Object... msg) {
-        if (!BuildConfig.DEBUG )
-            return;
+//        if (!BuildConfig.DEBUG )
+//            return;
         if (msg == null)
             return;
 

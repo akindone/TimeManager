@@ -13,6 +13,7 @@ import com.timer.jike.timemanager.bean.DaoSession;
 import com.timer.jike.timemanager.bean.Event;
 import com.timer.jike.timemanager.bean.EventDao;
 import com.timer.jike.timemanager.service.AutoLockService;
+import com.timer.jike.timemanager.utils.UtilBmob;
 import com.timer.jike.timemanager.utils.UtilDB;
 import com.timer.jike.timemanager.utils.UtilDialog;
 import com.timer.jike.timemanager.utils.UtilLog;
@@ -42,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.btn_ma_settings) Button mBtnSettings;
 
     private Date mStartTime;
-    private EventDao mEventDao;
     private boolean isStop;
     private Subscription mSubscription;
 
@@ -63,10 +63,8 @@ public class MainActivity extends AppCompatActivity {
 //        KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock(LOCK_TAG);
 //        keyguardLock.disableKeyguard();
         startService(new Intent(this, AutoLockService.class));
-
-        // get the note DAO
-        DaoSession daoSession = UtilDB.getDaoSession();
-        mEventDao = UtilDB.getEventDao();
+        //检查自动更新
+        UtilBmob.update(this);
     }
 
     @Override
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         event.setEnd_time(stopTime);
         event.setDuration(stopTime.getTime() - mStartTime.getTime());
 
-        mEventDao.insert(event);
+        UtilDB.getEventDao().insert(event);
         UtilLog.d(TAG, "insert", event.getId());
         mBtnStart.setEnabled(true);
         mBtnStop.setEnabled(false);

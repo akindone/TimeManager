@@ -69,5 +69,7 @@
     <color name="toolbar_text">#8f000000</color>
     <color name="accent">#2789e4</color>
 
+    <color name="black_overlay">#66000000</color>
+
 
 </resources>

@@ -11,7 +11,10 @@ public class UtilSP {
     public static final String TIME_MANAGER_SP = "TIME_MANAGER_SP";
 
     public static final String EVENT_START_TIME = "EVENT_START_TIME";
-    public static final String EVENT_TITLE = "EVENT_START_TIME";
+    public static final String EVENT_TITLE = "EVENT_TITLE";
+
+    public static final String USER_NAME = "USER_NAME";
+    public static final String USER_PWD = "USER_PWD";
 
 
     public static SharedPreferences getSPSetting(Context context) {

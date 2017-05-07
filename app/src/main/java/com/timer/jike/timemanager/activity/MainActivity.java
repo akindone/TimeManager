@@ -1,7 +1,6 @@
 package com.timer.jike.timemanager.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,8 +31,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends AppCompatActivity {
     private static String TAG;
-    private static final String EVENT_START_TIME = "EVENT_START_TIME";
-    private static final String EVENT_TITLE = "EVENT_TITLE";
     private static final String TITLE_DEFAULT = "标签";
 
 
@@ -69,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void restoreUnfinishedEvent() {
         long lastStartTime = UtilSP.getSPSetting(this).getLong(UtilSP.EVENT_START_TIME, -1);
+        String title = UtilSP.getSPSetting(this).getString(UtilSP.EVENT_TITLE, TITLE_DEFAULT);
+        mTvTitle.setText(title);
         if (lastStartTime != -1){
             mStartTime = new Date(lastStartTime);
             startCount(mStartTime);
@@ -111,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveUnFinishedEvent() {
         if (mStartTime != null){
            UtilSP.getSPSetting(this).edit().putLong(UtilSP.EVENT_START_TIME, mStartTime.getTime()).apply();
+           UtilSP.getSPSetting(this).edit().putString(UtilSP.EVENT_TITLE, mTvTitle.getText().toString()).apply();
         }
     }
 
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_ma_start)
     void onClickStart() {
         mStartTime = new Date();
-        UtilSP.getSPSetting(this).edit().putLong(UtilSP.EVENT_START_TIME, mStartTime.getTime()).apply();
+        saveUnFinishedEvent();
         startCount(mStartTime);
     }
 
@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         mBtnStop.setEnabled(false);
         mSubscription.unsubscribe();
         UtilSP.getSPSetting(this).edit().putLong(UtilSP.EVENT_START_TIME,-1).apply();
+        UtilSP.getSPSetting(this).edit().putString(UtilSP.EVENT_TITLE,TITLE_DEFAULT).apply();
         mStartTime = null;
     }
 
@@ -170,6 +171,11 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_ma_settings)
     void onClickSettings(){
         startActivity(new Intent(this, SettingsActivity.class));
+    }
+
+    @OnClick(R.id.btn_ma_login)
+    void onClickLogin(){
+        startActivity(new Intent(this, SyncActivity.class));
     }
 
 }

@@ -3,6 +3,7 @@ package com.timer.jike.timemanager.utils;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
@@ -81,5 +82,17 @@ public class UtilString {
             return decimalFormat.format(seconds / 60) + "min";
         } else
             return decimalFormat2.format(seconds) + "s";
+    }
+
+    public static boolean isValidPhone(String string){
+        return !TextUtils.isEmpty(string) && string.length()==11;
+    }
+
+    public static boolean isValidPwd(String string) {
+        return !TextUtils.isEmpty(string) ;
+    }
+
+    public static boolean isValidUserName(String string) {
+        return !TextUtils.isEmpty(string) ;
     }
 }

@@ -18,6 +18,11 @@ public class Event {
 
     @Id
     private Long id;
+    private String userServerUid;
+    private Date createdAtClient;
+    private Date updatedAtClient;
+
+    private Boolean isDeleted ;//如果新增字段，一定不要用基本数据类型，否则会报SQLiteConstraintException
 
     private Date begin_time;
     private Date end_time;
@@ -25,9 +30,14 @@ public class Event {
     private String detail;
     private long duration;
 
-    @Generated(hash = 1338613400)
-    public Event(Long id, Date begin_time, Date end_time, String title, String detail, long duration) {
+    @Generated(hash = 2021793152)
+    public Event(Long id, String userServerUid, Date createdAtClient, Date updatedAtClient, Boolean isDeleted,
+            Date begin_time, Date end_time, String title, String detail, long duration) {
         this.id = id;
+        this.userServerUid = userServerUid;
+        this.createdAtClient = createdAtClient;
+        this.updatedAtClient = updatedAtClient;
+        this.isDeleted = isDeleted;
         this.begin_time = begin_time;
         this.end_time = end_time;
         this.title = title;
@@ -97,6 +107,38 @@ public class Event {
                 ", detail='" + detail + '\'' +
                 ", duration=" + duration +
                 '}';
+    }
+
+    public String getUserServerUid() {
+        return this.userServerUid;
+    }
+
+    public void setUserServerUid(String userServerUid) {
+        this.userServerUid = userServerUid;
+    }
+
+    public Date getCreatedAtClient() {
+        return this.createdAtClient;
+    }
+
+    public void setCreatedAtClient(Date createdAtClient) {
+        this.createdAtClient = createdAtClient;
+    }
+
+    public Date getUpdatedAtClient() {
+        return this.updatedAtClient;
+    }
+
+    public void setUpdatedAtClient(Date updatedAtClient) {
+        this.updatedAtClient = updatedAtClient;
+    }
+
+    public Boolean getIsDeleted() {
+        return this.isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }
 

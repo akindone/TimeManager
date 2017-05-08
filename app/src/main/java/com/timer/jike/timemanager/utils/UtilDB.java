@@ -2,6 +2,8 @@ package com.timer.jike.timemanager.utils;
 
 import android.app.Application;
 
+import com.alamkanak.weekview.WeekViewEvent;
+import com.github.yuweiguocn.library.greendao.MigrationHelper;
 import com.timer.jike.timemanager.bean.ColorRule;
 import com.timer.jike.timemanager.bean.ColorRuleDao;
 import com.timer.jike.timemanager.bean.DaoMaster;
@@ -9,7 +11,6 @@ import com.timer.jike.timemanager.bean.DaoSession;
 import com.timer.jike.timemanager.bean.Event;
 import com.timer.jike.timemanager.bean.EventDao;
 
-import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.query.Query;
 
 import java.util.Calendar;
@@ -28,9 +29,13 @@ public class UtilDB {
     public static void init(Application app) {
 //        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(app, ENCRYPTED ? "events-db-encrypted" : "events-db");
 //        Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(app, "events-db" );
-        Database db = helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();
+
+
+        MigrationHelper.DEBUG = true; //如果你想查看日志信息，请将DEBUG设置为true
+        UtilSQLiteOpenHelper helper = new UtilSQLiteOpenHelper(app, "events-db", null);
+        DaoMaster daoMaster = new DaoMaster(helper.getWritableDatabase());
+//        Database db = helper.getWritableDb();
+        daoSession = daoMaster.newSession();
     }
 
     public static DaoSession getDaoSession() {
@@ -80,4 +85,23 @@ public class UtilDB {
         return daoSession.getColorRuleDao().queryBuilder().build();
     }
 
+    public static void updateEvent(Event event) {
+        Date date = new Date();
+        event.setUpdatedAtClient(date);
+        daoSession.getEventDao().update(event);
+    }
+
+    public static void setEventDeleted(Event event) {
+        event.setIsDeleted(true);
+        event.setUpdatedAtClient(new Date());
+        daoSession.getEventDao().update(event);
+    }
+
+    public static void insertEvent(Event event) {
+        Date date = new Date();
+        event.setCreatedAtClient(date);
+        event.setUpdatedAtClient(date);
+        event.setUserServerUid(UtilBmob.getUserServerUid());
+        daoSession.getEventDao().insert(event);
+    }
 }

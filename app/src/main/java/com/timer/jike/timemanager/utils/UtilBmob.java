@@ -24,8 +24,10 @@ public class UtilBmob {
 
     private static final String APPLICTION_ID = "9808f66ad92e98c3973ae1248ef6515d";
     private static final String TAG = "UtilBmob";
+    private static Application mApp;
 
     public static void init(Application app) {
+        mApp = app;
         //第二：自v3.4.7版本开始,设置BmobConfig,允许设置请求超时时间、文件分片上传时每片的大小、文件的过期时间(单位为秒)，
         BmobConfig config =new BmobConfig.Builder(app)
                 //设置appkey
@@ -103,6 +105,14 @@ public class UtilBmob {
                 }
             }
         });
+    }
+
+    public static String getUserServerUid(){
+        MyUser bmobUser = BmobUser.getCurrentUser(MyUser.class);
+        if(bmobUser != null){
+            return bmobUser.getObjectId();
+        }
+        return null;//UtilDevice.getDeviceId(mApp);
     }
 
     public static boolean isLoggedin(){

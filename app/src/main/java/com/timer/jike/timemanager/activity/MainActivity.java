@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         event.setTitle(mTvTitle.getText().toString());
         event.setEnd_time(stopTime);
         event.setDuration(stopTime.getTime() - mStartTime.getTime());
-        UtilDB.getEventDao().insert(event);
+        UtilDB.insertEvent(event);
         UtilLog.d(TAG, "insert", event.getId());
 
         mBtnStart.setEnabled(true);

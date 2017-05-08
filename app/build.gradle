@@ -63,7 +63,7 @@ android {
 }
 
 greendao {
-    schemaVersion 1000
+    schemaVersion 1001
 }
 
 dependencies {
@@ -91,6 +91,7 @@ dependencies {
     // This is only needed if you want to use encrypted databases
 //    compile 'net.zetetic:android-database-sqlcipher:3.5.6'
     compile 'org.greenrobot:greendao:3.2.2'
+    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.3.0'
 
     compile 'com.afollestad.material-dialogs:core:0.9.4.4'
 

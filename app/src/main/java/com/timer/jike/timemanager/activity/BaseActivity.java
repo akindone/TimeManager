@@ -211,9 +211,16 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
                 long duration1 = endTime.getTime() - startTime.getTime();
 
                 if(validateInfos(startTime,endTime,duration1)){
-                    Event event2 = new Event(event1.getId(), startTime, endTime, title.getText().toString(), detail.getText
-                            ().toString(), duration1);
-                    UtilDB.getEventDao().update(event2);
+                    Event newEvent = new Event();
+                    newEvent.setId(event1.getId());
+                    newEvent.setBegin_time(startTime);
+                    newEvent.setEnd_time(endTime);
+                    newEvent.setTitle(title.getText().toString());
+                    newEvent.setDetail(detail.getText().toString());
+                    newEvent.setDuration(duration1);
+
+                    UtilDB.updateEvent(newEvent);
+
                     Toast.makeText(BaseActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                     mWeekView.notifyDatasetChanged();
                     dialog.dismiss();
@@ -229,7 +236,7 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
         MaterialDialog.SingleButtonCallback callbackP = (dialog, which) -> {
             Event event1 = UtilDB.queryEventsBy(event.getId()).list().get(0);
-            UtilDB.getEventDao().delete(event1);
+            UtilDB.setEventDeleted(event1);
             Toast.makeText(BaseActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
             mWeekView.notifyDatasetChanged();
         };
@@ -279,7 +286,7 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
                     event2.setBegin_time(startTime);
                     event2.setEnd_time(endTime);
                     event2.setDuration(duration1);
-                    UtilDB.getEventDao().insert(event2);
+                    UtilDB.insertEvent(event2);
 
                     Toast.makeText(BaseActivity.this, "创建成功", Toast.LENGTH_SHORT).show();
                     //不知道为啥没有刷新,强制刷新一下

@@ -89,7 +89,7 @@ dependencies {
     compile 'com.github.feeeei:CircleSeekbar:v1.1.2'
 
     // This is only needed if you want to use encrypted databases
-    compile 'net.zetetic:android-database-sqlcipher:3.5.6'
+//    compile 'net.zetetic:android-database-sqlcipher:3.5.6'
     compile 'org.greenrobot:greendao:3.2.2'
 
     compile 'com.afollestad.material-dialogs:core:0.9.4.4'

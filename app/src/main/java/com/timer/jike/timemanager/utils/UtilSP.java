@@ -16,6 +16,10 @@ public class UtilSP {
     public static final String USER_NAME = "USER_NAME";
     public static final String USER_PWD = "USER_PWD";
 
+    public static final String SYNC_TIME = "SYNC_TIME";
+
+//    用BmobUser的objectId去作为key
+
 
     public static SharedPreferences getSPSetting(Context context) {
         return context.getSharedPreferences(TIME_MANAGER_SP, Context.MODE_PRIVATE);

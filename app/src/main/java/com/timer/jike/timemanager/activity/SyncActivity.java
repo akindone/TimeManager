@@ -8,17 +8,27 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.timer.jike.timemanager.R;
+import com.timer.jike.timemanager.bean.BmobEvent;
 import com.timer.jike.timemanager.bean.MyUser;
+import com.timer.jike.timemanager.utils.UtilBmob;
+import com.timer.jike.timemanager.utils.UtilDB;
 import com.timer.jike.timemanager.utils.UtilLog;
 import com.timer.jike.timemanager.utils.UtilSP;
 import com.timer.jike.timemanager.utils.UtilString;
 
+import java.util.Date;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.LogInListener;
+import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 
 
@@ -117,8 +127,47 @@ public class SyncActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_la_sync)
     void onClickSync(){
+//        if(UtilBmob.isLoggedin()){
+//            MyUser currentUser = BmobUser.getCurrentUser(MyUser.class);
+//            String objectId = currentUser.getObjectId();
+//            Toast.makeText(this, objectId, Toast.LENGTH_SHORT).show();
+//
+//            //从server获取该用户的最新记录
+//            boolean isNeedDownload = true;
+//            //从本地数据库中获取该用户的最新记录
+//            //比较
+//            if (isNeedDownload){
+//                long localLatest = -1;
+//                Date localLatestTime = new Date(localLatest);
+//                new BmobQuery<BmobEvent>()
+//                        .addWhereEqualTo("userId", objectId)
+//                        .addWhereGreaterThan("updatedDate", new BmobDate(localLatestTime))
+//                        .findObjects(new FindListener<BmobEvent>() {
+//                            @Override
+//                            public void done(List<BmobEvent> list, BmobException e) {
+//                                if(e==null){
+//                                    //遍历，如果本地数据库存在则update，不存在就insert
+//                                }else{
+//                                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+//                                }
+//                            }
+//                        });
+//            } else {
+//                //从本地查询在此日期之后的记录
+//                //分2种情况
+//            }
+//
+//
+//        } else {
+//            Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
+//        }
+//
+//        long syncTime = UtilSP.getSPSetting(this).getLong(UtilSP.SYNC_TIME, -1);
+//        Date syncDate = new Date(syncTime);
         Toast.makeText(this, "上传或者下载该帐户的数据到本地，敬请期待！", Toast.LENGTH_SHORT).show();
     }
+
+
 
     private boolean validateFormInput() {
         if (!UtilString.isValidUserName(mEtUsername.getText().toString())){

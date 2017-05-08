@@ -20,15 +20,16 @@ import java.util.Date;
  */
 
 public class UtilDB {
-    /**
-     * A flag to show how easily you can switch from standard SQLite to the encrypted SQLCipher.
-     */
-    public static final boolean ENCRYPTED = false;
+
+// A flag to show how easily you can switch from standard SQLite to the encrypted SQLCipher.
+//    public static final boolean ENCRYPTED = false;
     private static DaoSession daoSession;
 
     public static void init(Application app) {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(app, ENCRYPTED ? "events-db-encrypted" : "events-db");
-        Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
+//        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(app, ENCRYPTED ? "events-db-encrypted" : "events-db");
+//        Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(app, "events-db" );
+        Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
     }
 

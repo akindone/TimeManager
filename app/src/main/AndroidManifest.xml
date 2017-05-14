@@ -60,6 +60,9 @@
         <activity android:name=".activity.SettingsActivity">
         </activity>
 
+        <activity android:name=".activity.UIExpandableLvActivity">
+        </activity>
+
         <!-- BMOB 自动更新 -->
         <activity
             android:name="cn.bmob.v3.update.UpdateDialogActivity"

@@ -1,14 +1,21 @@
 package com.timer.jike.timemanager.activity;
 
+import android.content.Context;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -18,15 +25,22 @@ import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.timer.jike.timemanager.R;
+import com.timer.jike.timemanager.bean.BaseProperty;
 import com.timer.jike.timemanager.bean.Event;
+import com.timer.jike.timemanager.bean.PropertyImportance;
+import com.timer.jike.timemanager.bean.PropertyPredictability;
+import com.timer.jike.timemanager.bean.PropertyType;
 import com.timer.jike.timemanager.utils.UtilDB;
 import com.timer.jike.timemanager.utils.UtilDate;
 import com.timer.jike.timemanager.utils.UtilDialog;
+import com.timer.jike.timemanager.utils.UtilList;
+import com.timer.jike.timemanager.utils.UtilLog;
 import com.timer.jike.timemanager.utils.UtilString;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -44,6 +58,9 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     private WeekView mWeekView;
 
     String TAG;
+    private List<PropertyImportance> mImportanceList;
+    private List<PropertyPredictability> mPredictList;
+    private List<PropertyType> mTypeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +87,13 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
         // Set up a date time interpreter to interpret how the date and time will be formatted in
         // the week view. This is optional.
         setupDateTimeInterpreter(false);
+
+        mImportanceList = UtilDB.getImportanceList();
+        mPredictList = UtilDB.getPredictList();
+        mTypeList = UtilDB.getTypeList();
+
+        UtilLog.d(TAG,"onCreate",mImportanceList,mPredictList,mTypeList);
+
     }
 
 
@@ -168,7 +192,9 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     }
 
     protected String getEventDescription(Event event) {
-        return String.format("%1$s/%2$s", event.getTitle(), UtilString.getHour(event.getDuration()));
+        String predic = event.getPredictability() == null ? "" : event.getPredictability().getSignal();
+        String importance = event.getImportance() == null ? "" : event.getImportance().getSignal();
+        return String.format("%1$s%2$s%3$s/%4$s", predic,importance, event.getTitle(), UtilString.getHour(event.getDuration()));
     }
 
     @Override
@@ -181,6 +207,64 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
         EditText duration = (EditText) inflate.findViewById(R.id.tv_de_duration);
         EditText start = (EditText) inflate.findViewById(R.id.tv_de_start);
         EditText end = (EditText) inflate.findViewById(R.id.tv_de_end);
+
+        Spinner importanceSpinner = (Spinner) inflate.findViewById(R.id.sp_de_importance);
+        Spinner predictSpinner = (Spinner) inflate.findViewById(R.id.sp_de_predict);
+        Spinner typeSpinner = (Spinner) inflate.findViewById(R.id.sp_de_type);
+
+        MyAdapter<PropertyImportance> importanceMyAdapter = new MyAdapter<>(this, mImportanceList);
+        MyAdapter<PropertyPredictability> predictMyAdapter = new MyAdapter<>(this, mPredictList);
+        MyAdapter<PropertyType> typeMyAdapter = new MyAdapter<>(this, mTypeList);
+
+        importanceSpinner.setAdapter(importanceMyAdapter);
+        predictSpinner.setAdapter(predictMyAdapter);
+        typeSpinner.setAdapter(typeMyAdapter);
+
+        int positionImportance = UtilList.getPosition(mImportanceList, event1.getImportance());
+        if (positionImportance != -1)
+            importanceSpinner.setSelection(positionImportance);
+        int positionPredict = UtilList.getPosition(mPredictList, event1.getPredictability());
+        if (positionPredict != -1)
+            predictSpinner.setSelection(positionPredict);
+        int positionType = UtilList.getPosition(mTypeList, event1.getType());
+        if (positionType != -1)
+            typeSpinner.setSelection(positionType);
+
+        importanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                event1.setImportance(mImportanceList.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        predictSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                event1.setPredictability(mPredictList.get(position));
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                event1.setType(mTypeList.get(position));
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
         MaterialDialog.SingleButtonCallback callbackN = (dialog, which) -> {
@@ -211,15 +295,13 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
                 long duration1 = endTime.getTime() - startTime.getTime();
 
                 if(validateInfos(startTime,endTime,duration1)){
-                    Event newEvent = new Event();
-                    newEvent.setId(event1.getId());
-                    newEvent.setBegin_time(startTime);
-                    newEvent.setEnd_time(endTime);
-                    newEvent.setTitle(title.getText().toString());
-                    newEvent.setDetail(detail.getText().toString());
-                    newEvent.setDuration(duration1);
 
-                    UtilDB.updateEvent(newEvent);
+                    event1.setBegin_time(startTime);
+                    event1.setEnd_time(endTime);
+                    event1.setTitle(title.getText().toString());
+                    event1.setDetail(detail.getText().toString());
+                    event1.setDuration(duration1);
+                    UtilDB.updateEvent(event1);
 
                     Toast.makeText(BaseActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                     mWeekView.notifyDatasetChanged();
@@ -228,8 +310,6 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
             }
         };
         UtilDialog.buildDialog(this, "查看记录", "知道了", "修改", callbackP, callbackN, inflate, false);
-
-//        Toast.makeText(this, "Clicked " + event.getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -242,7 +322,6 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
         };
         MaterialDialog dialog = UtilDialog.buildDialog(this, "确认删除","确认","取消",callbackP,null );
         dialog.setContent("删除了可没后悔药，是否真的要删除？");
-//        Toast.makeText(this, "Long pressed event: " + event.getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -265,6 +344,57 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
                 }
             });
 
+
+            Spinner importanceSpinner = (Spinner) inflate.findViewById(R.id.sp_de_importance);
+            Spinner predictSpinner = (Spinner) inflate.findViewById(R.id.sp_de_predict);
+            Spinner typeSpinner = (Spinner) inflate.findViewById(R.id.sp_de_type);
+
+            MyAdapter<PropertyImportance> importanceMyAdapter = new MyAdapter<>(this, mImportanceList);
+            MyAdapter<PropertyPredictability> predictMyAdapter = new MyAdapter<>(this, mPredictList);
+            MyAdapter<PropertyType> typeMyAdapter = new MyAdapter<>(this, mTypeList);
+
+            importanceSpinner.setAdapter(importanceMyAdapter);
+            predictSpinner.setAdapter(predictMyAdapter);
+            typeSpinner.setAdapter(typeMyAdapter);
+
+            Event event2 = new Event();
+
+            importanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    event2.setImportance(mImportanceList.get(position));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+            predictSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    event2.setPredictability(mPredictList.get(position));
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+            typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    event2.setType(mTypeList.get(position));
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
             title.setEnabled(true);
             detail.setEnabled(true);
             start.setEnabled(true);
@@ -280,7 +410,6 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
                 long duration1 = endTime.getTime() - startTime.getTime();
 
                 if(validateInfos(startTime,endTime,duration1)){
-                    Event event2 = new Event();
                     event2.setTitle(title.getText().toString());
                     event2.setDetail(detail.getText().toString());
                     event2.setBegin_time(startTime);
@@ -300,7 +429,6 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
         };
         MaterialDialog dialogCreate = UtilDialog.buildDialog(this, "创建记录","确认","取消",callbackP,null );
         dialogCreate.setContent("要创建一个新记录？注意开始时间和结束时间要按规则填写！");
-//        Toast.makeText(this, "Empty view long pressed: " + getEventDescription(time), Toast.LENGTH_SHORT).show();
     }
 
     private boolean validateInfos(Date startTime, Date endTime, long duration1) {
@@ -318,5 +446,45 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
 
     public WeekView getWeekView() {
         return mWeekView;
+    }
+
+
+    class MyAdapter<T extends BaseProperty> extends BaseAdapter {
+        private List<T> mList;
+        private Context mContext;
+
+        public MyAdapter(Context pContext, List<T> pList) {
+            this.mContext = pContext;
+            this.mList = pList;
+        }
+
+        @Override
+        public int getCount() {
+            return mList.size();
+        }
+
+        @Override
+        public BaseProperty getItem(int position) {
+            return mList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater _LayoutInflater=LayoutInflater.from(mContext);
+            TextView textView;
+            if(convertView!=null && convertView instanceof TextView) {
+                textView = (TextView) convertView.findViewById(R.id.tv_si_text);
+            } else {
+                convertView=_LayoutInflater.inflate(R.layout.spinner_item, null);
+                textView = (TextView) convertView.findViewById(R.id.tv_si_text);
+            }
+            textView.setText(mList.get(position).getText());
+            return convertView;
+        }
     }
 }

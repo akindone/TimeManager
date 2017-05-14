@@ -42,7 +42,8 @@ public class HistoryActivity extends BaseActivity {
             UtilLog.d(TAG,i,event);
             WeekViewEvent weekViewEvent = new WeekViewEvent(event.getId(), getEventDescription(event),
                     UtilDate.date2calendar(event.getBegin_time()), UtilDate.date2calendar(event.getEnd_time()));
-            weekViewEvent.setColor(getColorByTitle(event.getTitle()));
+            int color = event.getType() == null ? getColorByTitle(event.getTitle()) : event.getType().getColor();
+            weekViewEvent.setColor(color);
             events.add(weekViewEvent);
         }
 

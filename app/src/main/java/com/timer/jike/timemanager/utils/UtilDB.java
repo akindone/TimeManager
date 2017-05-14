@@ -4,17 +4,23 @@ import android.app.Application;
 
 import com.alamkanak.weekview.WeekViewEvent;
 import com.github.yuweiguocn.library.greendao.MigrationHelper;
+import com.timer.jike.timemanager.bean.BaseProperty;
 import com.timer.jike.timemanager.bean.ColorRule;
 import com.timer.jike.timemanager.bean.ColorRuleDao;
 import com.timer.jike.timemanager.bean.DaoMaster;
 import com.timer.jike.timemanager.bean.DaoSession;
 import com.timer.jike.timemanager.bean.Event;
 import com.timer.jike.timemanager.bean.EventDao;
+import com.timer.jike.timemanager.bean.PropertyImportance;
+import com.timer.jike.timemanager.bean.PropertyPredictability;
+import com.timer.jike.timemanager.bean.PropertyType;
+import com.timer.jike.timemanager.bean.PropertyTypeDao;
 
 import org.greenrobot.greendao.query.Query;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jike on 2017/5/6.
@@ -22,7 +28,8 @@ import java.util.Date;
 
 public class UtilDB {
 
-// A flag to show how easily you can switch from standard SQLite to the encrypted SQLCipher.
+    private static final String TAG = "UtilDB";
+    // A flag to show how easily you can switch from standard SQLite to the encrypted SQLCipher.
 //    public static final boolean ENCRYPTED = false;
     private static DaoSession daoSession;
 
@@ -36,18 +43,6 @@ public class UtilDB {
         DaoMaster daoMaster = new DaoMaster(helper.getWritableDatabase());
 //        Database db = helper.getWritableDb();
         daoSession = daoMaster.newSession();
-    }
-
-    public static DaoSession getDaoSession() {
-        return daoSession;
-    }
-
-    public static EventDao getEventDao() {
-        return daoSession.getEventDao();
-    }
-
-    public static Query<Event> queryEvents() {
-        return daoSession.getEventDao().queryBuilder().orderAsc(EventDao.Properties.Begin_time).build();
     }
 
     public static Query<Event> queryEventsBy(int year, int month) {
@@ -68,6 +63,7 @@ public class UtilDB {
 
         return daoSession.getEventDao().queryBuilder()
                 .where(EventDao.Properties.Begin_time.between(startTime, endTime))
+                .where(EventDao.Properties.IsDeleted.eq(false))//新增isDeleted
                 .orderDesc(EventDao.Properties.Begin_time).build();
     }
 
@@ -102,6 +98,55 @@ public class UtilDB {
         event.setCreatedAtClient(date);
         event.setUpdatedAtClient(date);
         event.setUserServerUid(UtilBmob.getUserServerUid());
+        event.setIsDeleted(false);
         daoSession.getEventDao().insert(event);
+    }
+
+    public static List<PropertyImportance> getImportanceList(){
+        return daoSession.getPropertyImportanceDao().queryBuilder().build().list();
+    }
+
+    public static List<PropertyPredictability> getPredictList(){
+        return daoSession.getPropertyPredictabilityDao().queryBuilder().build().list();
+    }
+
+    public static List<PropertyType> getTypeList(){
+        return daoSession.getPropertyTypeDao().queryBuilder().build().list();
+    }
+
+    public static void updateProperty(BaseProperty property) {
+        if (property instanceof PropertyType){
+            UtilDB.updatePropertyType((PropertyType) property);
+        } else if(property instanceof PropertyImportance){
+            UtilDB.updatePropertyType((PropertyType) property);
+        } else if(property instanceof PropertyPredictability){
+            UtilDB.updatePropertyPredict((PropertyPredictability) property);
+        } else {
+            throw new RuntimeException("property 类型不合法！");
+        }
+    }
+
+    public static void insertProperty(BaseProperty property) {
+        if (property instanceof PropertyType){
+            daoSession.getPropertyTypeDao().insert((PropertyType) property);
+        } else if(property instanceof PropertyImportance){
+            daoSession.getPropertyImportanceDao().insert((PropertyImportance) property);
+        } else if(property instanceof PropertyPredictability){
+            daoSession.getPropertyPredictabilityDao().insert((PropertyPredictability) property);
+        } else {
+            throw new RuntimeException("property 类型不合法！");
+        }
+    }
+
+    private static void updatePropertyType(PropertyType propertyType){
+        daoSession.getPropertyTypeDao().update(propertyType);
+    }
+
+    private static void updatePropertyPredict(PropertyPredictability propertyPredictability){
+        daoSession.getPropertyPredictabilityDao().update(propertyPredictability);
+    }
+
+    public static void updatePropertyImportance(PropertyImportance propertyImportance){
+        daoSession.getPropertyImportanceDao().update(propertyImportance);
     }
 }

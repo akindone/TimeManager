@@ -59,7 +59,6 @@
 
         <activity android:name=".activity.SettingsActivity">
         </activity>
-
         <activity android:name=".activity.UIExpandableLvActivity">
         </activity>
 
@@ -71,6 +70,10 @@
         <activity
             android:name=".activity.SyncActivity"
             android:label="@string/title_activity_sync">
+        </activity>
+        <activity android:name=".activity.StaticActivity">
+        </activity>
+        <activity android:name=".activity.MyStaticActivity">
         </activity>
     </application>
 

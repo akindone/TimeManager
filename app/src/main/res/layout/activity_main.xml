@@ -71,6 +71,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="登录"/>
+
+        <Button
+            android:id="@+id/btn_ma_static"
+            android:layout_width="@dimen/size_0"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="统计"/>
     </LinearLayout>
 </LinearLayout>
 

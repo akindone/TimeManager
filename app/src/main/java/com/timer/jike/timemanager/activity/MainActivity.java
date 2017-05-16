@@ -178,4 +178,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, SyncActivity.class));
     }
 
+    @OnClick(R.id.btn_ma_static)
+    void onClickStatic(){
+        startActivity(new Intent(this, StaticActivity.class));
+    }
 }

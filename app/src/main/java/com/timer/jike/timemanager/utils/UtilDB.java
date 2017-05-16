@@ -67,6 +67,28 @@ public class UtilDB {
                 .orderDesc(EventDao.Properties.Begin_time).build();
     }
 
+    public static List<Event> queryEventsBy(int year, int month, int date, long typeId) {
+        UtilLog.d(TAG,"queryEventsBy",year, month, date);
+        Calendar start = Calendar.getInstance();
+        start.clear();
+        start.set(Calendar.YEAR, year);
+        start.set(Calendar.MONTH, month);//注意,Calendar对象默认一月为0
+        start.set(Calendar.DATE, date);
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+
+
+        Date startTime = start.getTime();
+        Date endTime = new Date(startTime.getTime()+1000*24*60*60);
+
+        return daoSession.getEventDao().queryBuilder()
+                .where(EventDao.Properties.IsDeleted.eq(false))//新增isDeleted
+                .where(EventDao.Properties.TypeId.eq(typeId))
+                .where(EventDao.Properties.Begin_time.between(startTime, endTime))
+                .orderDesc(EventDao.Properties.Begin_time).build().list();
+    }
+
     public static Query<Event> queryEventsBy(long id) {
         return daoSession.getEventDao().queryBuilder()
                 .where(EventDao.Properties.Id.eq(id))

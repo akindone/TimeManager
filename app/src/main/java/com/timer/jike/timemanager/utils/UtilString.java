@@ -84,15 +84,19 @@ public class UtilString {
             return decimalFormat2.format(seconds) + "s";
     }
 
-    public static boolean isValidPhone(String string){
-        return !TextUtils.isEmpty(string) && string.length()==11;
+    public static float getHourFloat(long duration) {
+        return duration / (1000.00f * 3600);
+    }
+
+    public static boolean isValidPhone(String string) {
+        return !TextUtils.isEmpty(string) && string.length() == 11;
     }
 
     public static boolean isValidPwd(String string) {
-        return !TextUtils.isEmpty(string) ;
+        return !TextUtils.isEmpty(string);
     }
 
     public static boolean isValidUserName(String string) {
-        return !TextUtils.isEmpty(string) ;
+        return !TextUtils.isEmpty(string);
     }
 }

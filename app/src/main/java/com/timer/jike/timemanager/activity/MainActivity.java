@@ -182,4 +182,9 @@ public class MainActivity extends AppCompatActivity {
     void onClickStatic(){
         startActivity(new Intent(this, StaticActivity.class));
     }
+
+    @OnClick(R.id.btn_ma_my_static)
+    void onClickMyStatic(){
+        startActivity(new Intent(this, MyStaticActivity.class));
+    }
 }

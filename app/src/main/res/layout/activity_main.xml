@@ -70,6 +70,7 @@
             android:layout_width="@dimen/size_0"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="登录"/>
 
         <Button
@@ -77,6 +78,7 @@
             android:layout_width="@dimen/size_0"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="chart"/>
         <Button
             android:id="@+id/btn_ma_my_static"

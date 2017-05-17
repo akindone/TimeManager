@@ -148,13 +148,13 @@ public class UtilDB {
         }
     }
 
-    public static void insertProperty(BaseProperty property) {
+    public static long insertProperty(BaseProperty property) {
         if (property instanceof PropertyType){
-            daoSession.getPropertyTypeDao().insert((PropertyType) property);
+            return daoSession.getPropertyTypeDao().insert((PropertyType) property);
         } else if(property instanceof PropertyImportance){
-            daoSession.getPropertyImportanceDao().insert((PropertyImportance) property);
+            return daoSession.getPropertyImportanceDao().insert((PropertyImportance) property);
         } else if(property instanceof PropertyPredictability){
-            daoSession.getPropertyPredictabilityDao().insert((PropertyPredictability) property);
+            return daoSession.getPropertyPredictabilityDao().insert((PropertyPredictability) property);
         } else {
             throw new RuntimeException("property 类型不合法！");
         }

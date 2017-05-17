@@ -1,5 +1,6 @@
 package com.timer.jike.timemanager.activity;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.Display;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 
@@ -24,6 +26,7 @@ import com.timer.jike.timemanager.bean.PropertyType;
 import com.timer.jike.timemanager.utils.UtilDB;
 import com.timer.jike.timemanager.utils.UtilDialog;
 import com.timer.jike.timemanager.utils.UtilLog;
+import com.timer.jike.timemanager.utils.UtilSP;
 
 
 import java.util.Arrays;
@@ -39,9 +42,10 @@ public class UIExpandableLvActivity extends AppCompatActivity {
 
     public String[] groupStrings = {"预测性", "重要性", "类型"};
     public List<? extends BaseProperty>[] childStrings = new List[3];
-
+    public long[] defaultEventPropertyId = new long[3];
 
     private MyExpandableListAdapter mExpandableListAdapter;
+    private SharedPreferences mSpSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +53,22 @@ public class UIExpandableLvActivity extends AppCompatActivity {
         setContentView(R.layout.activity_uiexpandable_lv);
         ButterKnife.bind(this);
 
+        mSpSetting = UtilSP.getSPSetting(this);
+
         loadData();
         UtilLog.d(TAG,"childStrings", Arrays.toString(childStrings));
 
-        mExpandableListAdapter = new MyExpandableListAdapter(groupStrings, childStrings, this);
+        mExpandableListAdapter = new MyExpandableListAdapter(groupStrings, childStrings, this, defaultEventPropertyId);
         mElvAulExpandList.setAdapter(mExpandableListAdapter);
 
         setListener(mExpandableListAdapter);
     }
 
     private void loadData() {
+        defaultEventPropertyId[0] = mSpSetting.getLong(UtilSP.EVENT_PROPERTY_PREDICT_DEFAULT, -1);
+        defaultEventPropertyId[1] = mSpSetting.getLong(UtilSP.EVENT_PROPERTY_IMPORTANT_DEFAULT, -1);
+        defaultEventPropertyId[2] = mSpSetting.getLong(UtilSP.EVENT_PROPERTY_TYPE_DEFAULT, -1);
+
         List<PropertyImportance> importanceList = UtilDB.getImportanceList();
         List<PropertyPredictability> predictList = UtilDB.getPredictList();
         List<PropertyType> typeList = UtilDB.getTypeList();
@@ -70,14 +80,14 @@ public class UIExpandableLvActivity extends AppCompatActivity {
     private void setListener(final MyExpandableListAdapter adapter) {
         //        设置分组项的点击监听事件
         mElvAulExpandList.setOnGroupClickListener((parent, view, groupPosition, l) -> {
-            Toast.makeText(this, "setOnGroupClickListener", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "setOnGroupClickListener", Toast.LENGTH_SHORT).show();
             return false;
         });
 
         //        设置子选项点击监听事件
         mElvAulExpandList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             BaseProperty property = childStrings[groupPosition].get(childPosition);
-            Toast.makeText(getApplicationContext(), property.getText(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), property.getText(), Toast.LENGTH_SHORT).show();
 
 
             View inflate = View.inflate(this, R.layout.dialog_event_property, null);
@@ -86,24 +96,40 @@ public class UIExpandableLvActivity extends AppCompatActivity {
             EditText signal = (EditText) inflate.findViewById(R.id.et_dcs_signal);
             ColorPicker picker = (ColorPicker) inflate.findViewById(R.id.picker);
             SVBar svBar = (SVBar) inflate.findViewById(R.id.svbar);
+            View signalLL = inflate.findViewById(R.id.ll_dep_signal);
+            Switch setDefault = (Switch) inflate.findViewById(R.id.switch_dep_set_default);
 
             text.setText(property.getText());
-            if (property instanceof PropertyType){
-                signal.setVisibility(View.GONE);
-                picker.addSVBar(svBar);
-                picker.setColor(((PropertyType) property).getColor());
-                //To set the old selected color u can do it like this
-                picker.setOldCenterColor(picker.getColor());
-                picker.setOnColorChangedListener(((PropertyType) property)::setColor);
-                picker.setShowOldCenterColor(false);
-            } else {
-                picker.setVisibility(View.GONE);
-                svBar.setVisibility(View.GONE);
-                if (property instanceof PropertyPredictability){
+            setDefault.setChecked(property.getId().equals(defaultEventPropertyId[groupPosition]));
+
+            String spTag;
+            switch (groupPosition) {
+                case 0://predict
+                    picker.setVisibility(View.GONE);
+                    svBar.setVisibility(View.GONE);
+                    signalLL.setVisibility(View.VISIBLE);
                     signal.setText(((PropertyPredictability)property).getSignal());
-                } else if(property instanceof PropertyImportance){
+                    spTag = UtilSP.EVENT_PROPERTY_PREDICT_DEFAULT;
+                    break;
+                case 1://importance
+                    picker.setVisibility(View.GONE);
+                    svBar.setVisibility(View.GONE);
+                    signalLL.setVisibility(View.VISIBLE);
                     signal.setText(((PropertyImportance)property).getSignal());
-                }
+                    spTag = UtilSP.EVENT_PROPERTY_IMPORTANT_DEFAULT;
+                    break;
+                case 2://type
+                    signalLL.setVisibility(View.GONE);
+                    picker.addSVBar(svBar);
+                    picker.setColor(((PropertyType) property).getColor());
+                    //To set the old selected color u can do it like this
+                    picker.setOldCenterColor(picker.getColor());
+                    picker.setOnColorChangedListener(((PropertyType) property)::setColor);
+                    picker.setShowOldCenterColor(false);
+                    spTag = UtilSP.EVENT_PROPERTY_TYPE_DEFAULT;
+                    break;
+                default:
+                    throw new RuntimeException("property 类型不合法！");
             }
 
             MaterialDialog.SingleButtonCallback callbackP = (dialog, which) -> {
@@ -118,6 +144,9 @@ public class UIExpandableLvActivity extends AppCompatActivity {
                     ((PropertyImportance) property).setSignal(signal.getText().toString());
                 }
                 UtilDB.updateProperty(property);
+                if (setDefault.isChecked()){
+                    mSpSetting.edit().putLong(spTag,property.getId()).apply();
+                }
                 notifyDataSetChanged(groupPosition);
 
             };

@@ -85,9 +85,9 @@ public class MyStaticActivity extends AppCompatActivity {
 
         // create a custom MarkerView (extend MarkerView) and specify the layout
         // to use for it
-        MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
-        mv.setChartView(mLcType); // For bounds control
-        mLcType.setMarker(mv); // Set the marker to the chart
+//        MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
+//        mv.setChartView(mLcType); // For bounds control
+//        mLcType.setMarker(mv); // Set the marker to the chart
 
         // x-axis limit line
         LimitLine llXAxis = new LimitLine(10f, "Index 10");

@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_dep_signal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_m">
@@ -29,6 +30,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
+    <Switch
+        android:id="@+id/switch_dep_set_default"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="是否设置为默认属性？"
+        android:textOn="设为默认"
+        android:textOff="取消设为默认"/>
 
     <com.larswerkman.holocolorpicker.ColorPicker
         android:id="@+id/picker"

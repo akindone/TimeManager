@@ -1,6 +1,7 @@
 package com.timer.jike.timemanager.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,16 +11,22 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.timer.jike.timemanager.R;
+import com.timer.jike.timemanager.bean.BaseProperty;
 import com.timer.jike.timemanager.bean.Event;
+import com.timer.jike.timemanager.bean.PropertyImportance;
+import com.timer.jike.timemanager.bean.PropertyPredictability;
+import com.timer.jike.timemanager.bean.PropertyType;
 import com.timer.jike.timemanager.service.AutoLockService;
 import com.timer.jike.timemanager.utils.UtilBmob;
 import com.timer.jike.timemanager.utils.UtilDB;
 import com.timer.jike.timemanager.utils.UtilDialog;
+import com.timer.jike.timemanager.utils.UtilList;
 import com.timer.jike.timemanager.utils.UtilLog;
 import com.timer.jike.timemanager.utils.UtilSP;
 import com.timer.jike.timemanager.utils.UtilString;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -46,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private Date mStartTime;
     private Subscription mSubscription;
 
+    private SharedPreferences mSpSetting;
+    private BaseProperty[] mBaseProperties;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +68,38 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(this, AutoLockService.class));
 
         restoreUnfinishedEvent();
+        mSpSetting = UtilSP.getSPSetting(this);
 
         //检查自动更新
         UtilBmob.update(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
+    }
+
+    private void loadData() {
+        List<PropertyPredictability> predictList = UtilDB.getPredictList();
+        List<PropertyImportance> importanceList = UtilDB.getImportanceList();
+        List<PropertyType> typeList = UtilDB.getTypeList();
+
+        UtilLog.d(TAG,"onResume", importanceList, predictList, typeList);
+
+        long[] defaultEventPropertyId = new long[3];
+        defaultEventPropertyId[0] = mSpSetting.getLong(UtilSP.EVENT_PROPERTY_PREDICT_DEFAULT, -1);
+        defaultEventPropertyId[1] = mSpSetting.getLong(UtilSP.EVENT_PROPERTY_IMPORTANT_DEFAULT, -1);
+        defaultEventPropertyId[2] = mSpSetting.getLong(UtilSP.EVENT_PROPERTY_TYPE_DEFAULT, -1);
+
+        int positionPredict = UtilList.getPosition(predictList, defaultEventPropertyId[0]);
+        int positionImportance = UtilList.getPosition(importanceList, defaultEventPropertyId[1]);
+        int positionType = UtilList.getPosition(predictList, defaultEventPropertyId[2]);
+
+        mBaseProperties = new BaseProperty[3];
+        mBaseProperties[0] = predictList.get(positionPredict);
+        mBaseProperties[1] = importanceList.get(positionImportance);
+        mBaseProperties[2] = typeList.get(positionType);
     }
 
     private void restoreUnfinishedEvent() {
@@ -151,6 +189,11 @@ public class MainActivity extends AppCompatActivity {
         event.setTitle(mTvTitle.getText().toString());
         event.setEnd_time(stopTime);
         event.setDuration(stopTime.getTime() - mStartTime.getTime());
+        //设置属性默认值
+        event.setPredictability((PropertyPredictability) mBaseProperties[0]);
+        event.setImportance((PropertyImportance) mBaseProperties[1]);
+        event.setType((PropertyType) mBaseProperties[2]);
+
         UtilDB.insertEvent(event);
         UtilLog.d(TAG, "insert", event.getId());
 

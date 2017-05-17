@@ -21,4 +21,13 @@ public class UtilList {
         }
         return -1;
     }
+
+    public static int getPosition(List<? extends BaseProperty> list, long propertyId){
+        for (int i = 0; i < list.size(); i++) {
+            if (Objects.equals(list.get(i).getId(), propertyId)){
+                return i;
+            }
+        }
+        return -1;
+    }
 }

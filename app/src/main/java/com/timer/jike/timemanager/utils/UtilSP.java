@@ -18,6 +18,10 @@ public class UtilSP {
 
     public static final String SYNC_TIME = "SYNC_TIME";
 
+    public static final String EVENT_PROPERTY_TYPE_DEFAULT = "EVENT_PROPERTY_TYPE_DEFAULT";
+    public static final String EVENT_PROPERTY_PREDICT_DEFAULT = "EVENT_PROPERTY_PREDICT_DEFAULT";
+    public static final String EVENT_PROPERTY_IMPORTANT_DEFAULT = "EVENT_PROPERTY_IMPORTANT_DEFAULT";
+
 //    用BmobUser的objectId去作为key
 
 

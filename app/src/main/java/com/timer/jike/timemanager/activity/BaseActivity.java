@@ -1,6 +1,7 @@
 package com.timer.jike.timemanager.activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,7 @@ import com.timer.jike.timemanager.utils.UtilDate;
 import com.timer.jike.timemanager.utils.UtilDialog;
 import com.timer.jike.timemanager.utils.UtilList;
 import com.timer.jike.timemanager.utils.UtilLog;
+import com.timer.jike.timemanager.utils.UtilSP;
 import com.timer.jike.timemanager.utils.UtilString;
 
 import java.text.SimpleDateFormat;
@@ -62,6 +64,9 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     private List<PropertyPredictability> mPredictList;
     private List<PropertyType> mTypeList;
 
+    public long[] defaultEventPropertyId = new long[3];
+    private SharedPreferences mSpSetting;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,12 +93,22 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
         // the week view. This is optional.
         setupDateTimeInterpreter(false);
 
+        mSpSetting = UtilSP.getSPSetting(this);
+
+        loadData();
+
+    }
+
+    private void loadData() {
         mImportanceList = UtilDB.getImportanceList();
         mPredictList = UtilDB.getPredictList();
         mTypeList = UtilDB.getTypeList();
 
         UtilLog.d(TAG,"onCreate",mImportanceList,mPredictList,mTypeList);
 
+        defaultEventPropertyId[0] = mSpSetting.getLong(UtilSP.EVENT_PROPERTY_PREDICT_DEFAULT, -1);
+        defaultEventPropertyId[1] = mSpSetting.getLong(UtilSP.EVENT_PROPERTY_IMPORTANT_DEFAULT, -1);
+        defaultEventPropertyId[2] = mSpSetting.getLong(UtilSP.EVENT_PROPERTY_TYPE_DEFAULT, -1);
     }
 
 
@@ -394,6 +409,16 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
 
                 }
             });
+
+            int positionPredict = UtilList.getPosition(mPredictList, defaultEventPropertyId[0]);
+            if (positionPredict != -1)
+                predictSpinner.setSelection(positionPredict);
+            int positionImportance = UtilList.getPosition(mImportanceList, defaultEventPropertyId[1]);
+            if (positionImportance != -1)
+                importanceSpinner.setSelection(positionImportance);
+            int positionType = UtilList.getPosition(mTypeList, defaultEventPropertyId[2]);
+            if (positionType != -1)
+                typeSpinner.setSelection(positionType);
 
             title.setEnabled(true);
             detail.setEnabled(true);

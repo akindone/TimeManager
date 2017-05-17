@@ -1,6 +1,7 @@
 package com.timer.jike.timemanager.activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.timer.jike.timemanager.R;
 import com.timer.jike.timemanager.bean.ColorRule;
 import com.timer.jike.timemanager.utils.UtilDB;
 import com.timer.jike.timemanager.utils.UtilDialog;
+import com.timer.jike.timemanager.utils.UtilSP;
 
 import java.util.List;
 

@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         app:eventTextColor="@android:color/white"
         app:textSize="@dimen/font_4xs"
-        app:eventTextSize="@dimen/font_6xs"
+        app:eventTextSize="@dimen/font_4xs"
         app:hourHeight="30dp"
         app:maxHourHeight="200dp"
         app:headerColumnPadding="8dp"

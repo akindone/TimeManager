@@ -35,14 +35,45 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="showAllHistory"
+                android:visibility="gone"
                 android:text="至今"/>
         </LinearLayout>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lc_msa_line_predict"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="@dimen/margin_m"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lc_msa_line_important"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="@dimen/margin_m"/>
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lc_msa_line_type"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_above="@+id/seekBar1"/>
+            android:layout_marginBottom="@dimen/margin_m"/>
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pc_msa_predict"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="@dimen/margin_m"/>
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pc_msa_important"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="@dimen/margin_m"/>
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pc_msa_type"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="@dimen/margin_m"/>
 
     </LinearLayout>
 

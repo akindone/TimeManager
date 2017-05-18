@@ -214,7 +214,7 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        Event event1 = UtilDB.queryEventsBy(event.getId()).list().get(0);
+        Event event1 = UtilDB.queryEventsByMonth(event.getId()).list().get(0);
 
         View inflate = View.inflate(this, R.layout.dialog_event, null);
         EditText title = (EditText) inflate.findViewById(R.id.tv_de_title);
@@ -330,7 +330,7 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     @Override
     public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
         MaterialDialog.SingleButtonCallback callbackP = (dialog, which) -> {
-            Event event1 = UtilDB.queryEventsBy(event.getId()).list().get(0);
+            Event event1 = UtilDB.queryEventsByMonth(event.getId()).list().get(0);
             UtilDB.setEventDeleted(event1);
             Toast.makeText(BaseActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
             mWeekView.notifyDatasetChanged();

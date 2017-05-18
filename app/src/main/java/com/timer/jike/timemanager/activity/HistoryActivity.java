@@ -36,7 +36,7 @@ public class HistoryActivity extends BaseActivity {
         List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
         UtilLog.d(TAG,"onMonthChange",newYear,newMonth);
 
-        List<Event> list = UtilDB.queryEventsBy(newYear,newMonth).list();
+        List<Event> list = UtilDB.queryEventsByMonth(newYear,newMonth).list();//注意,Calendar对象默认一月为0
         for (int i = 0; i < list.size(); i++) {
             Event event = list.get(i);
             UtilLog.d(TAG,i,event);

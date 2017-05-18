@@ -1,15 +1,15 @@
 package com.timer.jike.timemanager.activity;
 
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.util.Log;
 import android.view.View;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -17,78 +17,190 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.Utils;
 import com.timer.jike.timemanager.R;
+import com.timer.jike.timemanager.bean.BaseProperty;
 import com.timer.jike.timemanager.bean.Event;
-import com.timer.jike.timemanager.bean.PropertyType;
 import com.timer.jike.timemanager.utils.UtilDB;
-import com.timer.jike.timemanager.utils.UtilDate;
 import com.timer.jike.timemanager.utils.UtilLog;
 import com.timer.jike.timemanager.utils.UtilString;
-import com.timer.jike.timemanager.view.MyMarkerView;
-
-import org.greenrobot.greendao.query.Query;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.timer.jike.timemanager.utils.UtilDB.PROPERTY_TYPE_IMPORTANCE;
+import static com.timer.jike.timemanager.utils.UtilDB.PROPERTY_TYPE_PREDICTABILITY;
+import static com.timer.jike.timemanager.utils.UtilDB.PROPERTY_TYPE_TYPE;
+
 public class MyStaticActivity extends AppCompatActivity {
-    private static final String TYPE_LAST_WEEK = "TYPE_LAST_WEEK";
-    private static final String TYPE_LAST_MONTH = "TYPE_LAST_MONTH";
-    private static final String TYPE_ALL_HISTORY = "TYPE_ALL_HISTORY";
+    public static final String TYPE_LAST_WEEK = "TYPE_LAST_WEEK";
+    public static final String TYPE_LAST_MONTH = "TYPE_LAST_MONTH";
+    public static final String TYPE_ALL_HISTORY = "TYPE_ALL_HISTORY";
     private static final String TAG = "MyStaticActivity";
+
+    private static final String[] labels = {"预测性","重要性","类型"};
 
 
 
     private int[] mColors = new int[] {
             ColorTemplate.VORDIPLOM_COLORS[0],
             ColorTemplate.VORDIPLOM_COLORS[1],
-            ColorTemplate.VORDIPLOM_COLORS[2]
+            ColorTemplate.VORDIPLOM_COLORS[2],
+            ColorTemplate.VORDIPLOM_COLORS[3],
+            ColorTemplate.VORDIPLOM_COLORS[4]
     };
 
 
+    private LineChart mLcPredict;
+    private LineChart mLcImportant;
     private LineChart mLcType;
+    private PieChart mPcPredict;
+    private PieChart mPcImportant;
+    private PieChart mPcType;
+
+    private StringBuilder[] centerText = new StringBuilder[3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_static);
 
+        mLcPredict = (LineChart) findViewById(R.id.lc_msa_line_predict);
+        mLcImportant = (LineChart) findViewById(R.id.lc_msa_line_important);
         mLcType = (LineChart) findViewById(R.id.lc_msa_line_type);
 
+        initLineChart(mLcPredict, PROPERTY_TYPE_PREDICTABILITY);
+        initLineChart(mLcImportant, PROPERTY_TYPE_IMPORTANCE);
+        initLineChart(mLcType, PROPERTY_TYPE_TYPE);
 
-//        mLcType.setOnChartGestureListener(this);//TODO
-//        mLcType.setOnChartValueSelectedListener(this);//TODO
-        mLcType.setDrawGridBackground(false);
+
+        initCenterTextSB();
+        mPcPredict = (PieChart) findViewById(R.id.pc_msa_predict);
+        mPcImportant = (PieChart) findViewById(R.id.pc_msa_important);
+        mPcType = (PieChart) findViewById(R.id.pc_msa_type);
+
+        initHalfPieChart(mPcPredict, PROPERTY_TYPE_PREDICTABILITY);
+        initHalfPieChart(mPcImportant, PROPERTY_TYPE_IMPORTANCE);
+        initHalfPieChart(mPcType, PROPERTY_TYPE_TYPE);
+
+
+    }
+
+    private void initHalfPieChart(PieChart pieChart, int propertyType) {
+//        pieChart.setBackgroundColor(Color.WHITE);
+        pieChart.setUsePercentValues(true);
+        pieChart.getDescription().setEnabled(false);
+
+//        mPcPredict.setCenterTextTypeface(mTfLight);
+
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleColor(Color.WHITE);
+
+        pieChart.setTransparentCircleColor(Color.WHITE);
+        pieChart.setTransparentCircleAlpha(110);
+
+        pieChart.setHoleRadius(58f);
+        pieChart.setTransparentCircleRadius(61f);
+
+        pieChart.setDrawCenterText(true);
+
+        pieChart.setRotationEnabled(false);
+        pieChart.setHighlightPerTapEnabled(true);
+
+        pieChart.setMaxAngle(360f); // HALF CHART
+        pieChart.setRotationAngle(180f);
+        pieChart.setCenterTextOffset(0, -20);
+
+
+        // add data
+        setPieChartDatas(TYPE_LAST_WEEK,pieChart, propertyType);
+
+
+        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+
+        Legend l = pieChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(12f);
+
+        // entry label styling
+        pieChart.setEntryLabelColor(Color.WHITE);
+//        mPcPredict.setEntryLabelTypeface(mTfRegular);
+        pieChart.setEntryLabelTextSize(16f);
+    }
+
+    private void setPieChartDatas(String typeDuration, PieChart pieChart, int propertyType) {
+        PieData data = getPieChartData(propertyType, typeDuration);
+        pieChart.setData(data);
+        pieChart.setCenterText(centerText[propertyType].toString());
+        pieChart.invalidate();
+    }
+
+    private PieData getPieChartData(int propertyType, String typeDuration) {
+        List<? extends BaseProperty> list = UtilDB.getPropertyList(propertyType);
+        int types = list.size();//某种属性有多少类
+
+        if (centerText[propertyType] != null)
+            centerText[propertyType].delete(0,centerText[propertyType].length());
+
+        ArrayList<PieEntry> values = new ArrayList<>();
+
+        for (int i = 0; i < types; i++) {
+            BaseProperty property = list.get(i);
+            List<Event> events = UtilDB.queryEventsBy(typeDuration, property.getId(), propertyType);
+            float hours = sumDuration(events);
+            values.add(new PieEntry(hours, property.getText()));
+            if (centerText[propertyType] != null){
+                centerText[propertyType].append(property.getText()).append(":")
+                        .append(String.valueOf(hours)).append("h").append("\n");
+            }
+
+        }
+
+        PieDataSet dataSet = new PieDataSet(values, labels[propertyType]);
+        dataSet.setSliceSpace(3f);
+        dataSet.setSelectionShift(5f);
+
+        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        //dataSet.setSelectionShift(0f);
+
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
+        return data;
+    }
+
+    private void initCenterTextSB(){
+        centerText[0] = new StringBuilder();
+        centerText[1] = new StringBuilder();
+        centerText[2] = new StringBuilder();
+    }
+
+    private void initLineChart(LineChart lineChart, int propertyType) {
+        lineChart.setDrawGridBackground(false);
 
         // no description text
-        mLcType.getDescription().setEnabled(false);
-
+        lineChart.getDescription().setEnabled(false);
         // enable touch gestures
-        mLcType.setTouchEnabled(true);
+        lineChart.setTouchEnabled(true);
 
         // enable scaling and dragging
-        mLcType.setDragEnabled(true);
-        mLcType.setScaleEnabled(true);
-        // lcType.setScaleXEnabled(true);
-        // lcType.setScaleYEnabled(true);
-
+        lineChart.setDragEnabled(true);
+        lineChart.setScaleEnabled(true);
         // if disabled, scaling can be done on x- and y-axis separately
-        mLcType.setPinchZoom(true);
-
-        // set an alternative background color
-        // lcType.setBackgroundColor(Color.GRAY);
-
-        // create a custom MarkerView (extend MarkerView) and specify the layout
-        // to use for it
-//        MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
-//        mv.setChartView(mLcType); // For bounds control
-//        mLcType.setMarker(mv); // Set the marker to the chart
-
+        lineChart.setPinchZoom(false);
         // x-axis limit line
         LimitLine llXAxis = new LimitLine(10f, "Index 10");
         llXAxis.setLineWidth(4f);
@@ -96,104 +208,97 @@ public class MyStaticActivity extends AppCompatActivity {
         llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
         llXAxis.setTextSize(10f);
 
-        XAxis xAxis = mLcType.getXAxis();
+        XAxis xAxis = lineChart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
-        //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
-        //xAxis.addLimitLine(llXAxis); // add x-axis limit line
 
-
-        Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
-
-        /*LimitLine ll1 = new LimitLine(150f, "Upper Limit");
-        ll1.setLineWidth(4f);
-        ll1.enableDashedLine(10f, 10f, 0f);
-        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-        ll1.setTextSize(10f);
-        ll1.setTypeface(tf);*/
-
-        /*LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
-        ll2.setLineWidth(4f);
-        ll2.enableDashedLine(10f, 10f, 0f);
-        ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-        ll2.setTextSize(10f);
-        ll2.setTypeface(tf);*/
-
-        YAxis leftAxis = mLcType.getAxisLeft();
+        YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
-//        leftAxis.addLimitLine(ll1);
-//        leftAxis.addLimitLine(ll2);
         leftAxis.setAxisMaximum(24f);
         leftAxis.setAxisMinimum(0f);
-        //leftAxis.setYOffset(20f);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
-
         // limit lines are drawn behind data (and not on top)
         leftAxis.setDrawLimitLinesBehindData(true);
 
-        mLcType.getAxisRight().setEnabled(false);
-
-        //lcType.getViewPortHandler().setMaximumScaleY(2f);
-        //lcType.getViewPortHandler().setMaximumScaleX(2f);
+        lineChart.getAxisRight().setEnabled(false);
 
         // add data
-        setDatas(TYPE_LAST_WEEK);
+        setLineChartDatas(TYPE_LAST_WEEK,lineChart, propertyType);
 
-//        lcType.setVisibleXRange(20);
-//        lcType.setVisibleYRange(20f, AxisDependency.LEFT);
-//        lcType.centerViewTo(20, 50, AxisDependency.LEFT);
-
-        mLcType.animateX(2500);
+        lineChart.animateX(2500);
         //lcType.invalidate();
 
         // get the legend (only possible after setting data)
-        Legend l = mLcType.getLegend();
+        Legend l = lineChart.getLegend();
 
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
     }
 
     public void showLastWeek(View view) {
-        setDatas(TYPE_LAST_WEEK);
-        // redraw
-        mLcType.invalidate();
+        setAllLineChartDatas(TYPE_LAST_WEEK);
+//        toggleValues(mLcType,true);
+
     }
 
     public void showLastMonth(View view) {
-        setDatas(TYPE_LAST_WEEK);
-        // redraw
-        mLcType.invalidate();
+        setAllLineChartDatas(TYPE_LAST_MONTH);
+//        toggleValues(mLcType,false);
     }
 
     public void showAllHistory(View view) {
-        setDatas(TYPE_LAST_WEEK);
-        // redraw
+        setAllLineChartDatas(TYPE_LAST_WEEK);
         mLcType.invalidate();
     }
 
-    private void setDatas(String type){
-        List<PropertyType> list = UtilDB.getTypeList();
+    public void setAllLineChartDatas(String type) {
+        setLineChartDatas(type, mLcPredict, PROPERTY_TYPE_PREDICTABILITY);
+        setLineChartDatas(type, mLcImportant, PROPERTY_TYPE_IMPORTANCE);
+        setLineChartDatas(type, mLcType, PROPERTY_TYPE_TYPE);
+
+        setPieChartDatas(type, mPcPredict, PROPERTY_TYPE_PREDICTABILITY);
+        setPieChartDatas(type, mPcImportant, PROPERTY_TYPE_IMPORTANCE);
+        setPieChartDatas(type, mPcType, PROPERTY_TYPE_TYPE);
+
+    }
+
+    private void setLineChartDatas(String type, LineChart lineChart,int propertyType){
+        LineData data = getLineChartData(propertyType, type);
+        lineChart.setData(data);
+        lineChart.invalidate();
+    }
+    
+    private LineData getLineChartData(int propertyType, String durationType){
+
+        List<? extends BaseProperty> list = UtilDB.getPropertyList(propertyType);
         int types = list.size();//某种属性有多少类
         int count = 7;
-        switch (type){
+        switch (durationType){
             case TYPE_LAST_WEEK:
                 count = 7;
                 break;
             case TYPE_LAST_MONTH:
+                Calendar instance = Calendar.getInstance();
+                instance.setTime(new Date());
+                int month = instance.get(Calendar.MONTH);
+                instance.set(Calendar.MONTH, month -1);
+                instance.setTime(instance.getTime());
+                int actualMaximum = instance.getActualMaximum(Calendar.DAY_OF_MONTH);// 此月份的天数
+                Log.d(TAG,"actualMaximum "+ actualMaximum);
+                count = actualMaximum;
                 break;
             case TYPE_ALL_HISTORY:
+                //// TODO: 2017/5/17
                 break;
         }
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
 
         for (int z = 0; z < types; z++) {
-
-
-            ArrayList<Entry> values = getEntry(count, list.get(z).getId());
+            ArrayList<Entry> values = getEntry(durationType, count, list.get(z).getId(),propertyType);
 
             LineDataSet d = new LineDataSet(values, list.get(z).getText());
             d.setLineWidth(2.5f);
-            d.setCircleRadius(4f);
+            d.setCircleRadius(2f);
 
             int color = mColors[z % mColors.length];
             d.setColor(color);
@@ -201,87 +306,11 @@ public class MyStaticActivity extends AppCompatActivity {
             dataSets.add(d);
         }
 
-        // make the first DataSet dashed
-//        ((LineDataSet) dataSets.get(0)).enableDashedLine(10, 10, 0);
-//        ((LineDataSet) dataSets.get(0)).setColors(ColorTemplate.VORDIPLOM_COLORS);
-//        ((LineDataSet) dataSets.get(0)).setCircleColors(ColorTemplate.VORDIPLOM_COLORS);
-
-        LineData data = new LineData(dataSets);
-        mLcType.setData(data);
-        mLcType.invalidate();
+        return new LineData(dataSets);
     }
 
-    private void setData(String typeLastWeek) {
-        // 获取数据
-        ArrayList<Entry> values = getData(typeLastWeek);
 
-        LineDataSet set1;
-
-        if (mLcType.getData() != null &&
-                mLcType.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet)mLcType.getData().getDataSetByIndex(0);
-            set1.setValues(values);
-            mLcType.getData().notifyDataChanged();
-            mLcType.notifyDataSetChanged();
-        } else {
-            // create a dataset and give it a type
-            set1 = new LineDataSet(values, "DataSet 1");
-
-            set1.setDrawIcons(false);
-
-            // set the line to be drawn like this "- - - - - -"
-            set1.enableDashedLine(10f, 5f, 0f);
-            set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLACK);
-            set1.setLineWidth(1f);
-            set1.setCircleRadius(3f);
-            set1.setDrawCircleHole(false);
-            set1.setValueTextSize(9f);
-            set1.setDrawFilled(true);
-            set1.setFormLineWidth(1f);
-            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-            set1.setFormSize(15.f);
-
-            if (Utils.getSDKInt() >= 18) {
-                // fill drawable only supported on api level 18 and above
-                Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-                set1.setFillDrawable(drawable);
-            }
-            else {
-                set1.setFillColor(Color.BLACK);
-            }
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-            dataSets.add(set1); // add the datasets
-
-            // create a data object with the datasets
-            LineData data = new LineData(dataSets);
-
-            // set data
-            mLcType.setData(data);
-        }
-
-    }
-
-    private ArrayList<Entry> getData(String typeLastWeek) {
-        int count;
-        ArrayList<Entry> values = null;
-        switch (typeLastWeek){
-            case TYPE_LAST_WEEK:
-                count = 7;
-                getEntry(count,UtilDB.getTypeList().get(0).getId());
-                break;
-            case TYPE_LAST_MONTH:
-                break;
-            case TYPE_ALL_HISTORY:
-                break;
-        }
-
-        return values;
-    }
-
-    private ArrayList<Entry> getEntry(int count, long typeId) {
+    private ArrayList<Entry> getEntry(String type, int count, long typeId, int propertyType) {
         ArrayList<Entry> values = new ArrayList<Entry>();
 
         for (int i = 0; i < count; i++) {
@@ -289,23 +318,55 @@ public class MyStaticActivity extends AppCompatActivity {
             Calendar cal= Calendar.getInstance();
             cal.setTime(new Date());
             int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+            int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
 
             UtilLog.d(TAG,"thisWeek",cal.toString());
-            cal.add(Calendar.DATE,i-6-dayOfWeek);
+            int addAmount;
+            switch (type){
+                case TYPE_LAST_WEEK:
+                    addAmount = i - dayOfWeek - count + 1;
+                    break;
+                case TYPE_LAST_MONTH:
+                    addAmount = i - dayOfMonth - count + 1;
+                    break;
+                case TYPE_ALL_HISTORY:
+                default:
+                    addAmount = i - dayOfWeek - count + 1;//// TODO: 2017/5/17
+                    break;
+            }
+            cal.add(Calendar.DATE,addAmount);
             UtilLog.d(TAG,"LastWeek",cal.toString());
 
 
-            List<Event> events = UtilDB.queryEventsBy(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DATE), typeId);
+            List<Event> events = UtilDB.queryEventsByDay(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DATE), typeId, propertyType);
 
-            long val = 0;
-            for (int j = 0; j < events.size(); j++) {
-                val += events.get(j).getDuration();
-            }
-            float hourFloat = UtilString.getHourFloat(val);
+            float hourFloat = sumDuration(events);
             values.add(new Entry(i, hourFloat));
         }
         
         return values;
     }
+
+    private float sumDuration(List<Event> events) {
+        long val = 0;
+        for (int j = 0; j < events.size(); j++) {
+            val += events.get(j).getDuration();
+        }
+        return UtilString.getHourFloat(val);
+    }
+
+
+    private void toggleValues(LineChart chart,boolean isDrawValuesEnable){
+        List<ILineDataSet> sets = chart.getData().getDataSets();
+
+        for (ILineDataSet iSet : sets) {
+
+            LineDataSet set = (LineDataSet) iSet;
+            set.setDrawValues(isDrawValuesEnable);
+        }
+        // redraw
+        chart.invalidate();
+    }
+
 }

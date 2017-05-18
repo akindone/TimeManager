@@ -97,9 +97,13 @@ public class MainActivity extends AppCompatActivity {
         int positionType = UtilList.getPosition(predictList, defaultEventPropertyId[2]);
 
         mBaseProperties = new BaseProperty[3];
-        mBaseProperties[0] = predictList.get(positionPredict);
-        mBaseProperties[1] = importanceList.get(positionImportance);
-        mBaseProperties[2] = typeList.get(positionType);
+        mBaseProperties[0] = positionPredict == -1 ? null :predictList.get(positionPredict);
+        mBaseProperties[1] = positionImportance == -1 ? null : importanceList.get(positionImportance);
+        mBaseProperties[2] = positionType == -1 ? null : typeList.get(positionType);
+
+        if (mBaseProperties[0] == null || mBaseProperties[1]== null || mBaseProperties[2] == null){
+            UtilDialog.buildDialog(this,"先去设置页面添加属性吧","知道了", null, null, null, null);
+        }
     }
 
     private void restoreUnfinishedEvent() {

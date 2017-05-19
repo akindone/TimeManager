@@ -10,6 +10,7 @@ import android.view.View;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -20,6 +21,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -208,8 +210,7 @@ public class MyStaticActivity extends AppCompatActivity {
         llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
         llXAxis.setTextSize(10f);
 
-        XAxis xAxis = lineChart.getXAxis();
-        xAxis.enableGridDashedLine(10f, 10f, 0f);
+
 
         YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
@@ -233,6 +234,15 @@ public class MyStaticActivity extends AppCompatActivity {
 
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
+    }
+
+    private void setXAxis(LineChart lineChart, String typeDruation) {
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1f); // only intervals of 1 day
+        xAxis.setLabelCount(7);
+        xAxis.setValueFormatter(new MyAxisValueFormatter(typeDruation));
     }
 
     public void showLastWeek(View view) {
@@ -263,6 +273,7 @@ public class MyStaticActivity extends AppCompatActivity {
     }
 
     private void setLineChartDatas(String type, LineChart lineChart,int propertyType){
+        setXAxis(lineChart, type);
         LineData data = getLineChartData(propertyType, type);
         lineChart.setData(data);
         lineChart.invalidate();
@@ -367,6 +378,31 @@ public class MyStaticActivity extends AppCompatActivity {
         }
         // redraw
         chart.invalidate();
+    }
+
+    class MyAxisValueFormatter implements IAxisValueFormatter{
+        String typeDuration;
+
+        String[] weekDays = {"星期天","星期一","星期二️","星期三","星期四","星期五","星期六"};
+
+        public MyAxisValueFormatter(String typeDuration) {
+            this.typeDuration = typeDuration;
+        }
+
+
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            int day = (int)value;
+            switch (typeDuration){
+                case TYPE_LAST_WEEK:
+                    return weekDays[day];
+                case TYPE_LAST_MONTH:
+                    return  day+1+"日";
+                case TYPE_ALL_HISTORY:
+                    break;
+            }
+            return null;
+        }
     }
 
 }

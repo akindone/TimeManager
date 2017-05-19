@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.timer.jike.timemanager.R;
 import com.timer.jike.timemanager.bean.BaseProperty;
 import com.timer.jike.timemanager.bean.Event;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences mSpSetting;
     private BaseProperty[] mBaseProperties;
+    private MaterialDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +104,9 @@ public class MainActivity extends AppCompatActivity {
         mBaseProperties[2] = positionType == -1 ? null : typeList.get(positionType);
 
         if (mBaseProperties[0] == null || mBaseProperties[1]== null || mBaseProperties[2] == null){
-            UtilDialog.buildDialog(this,"先去设置页面添加属性吧","知道了", null, null, null, null);
+            if (mDialog != null && mDialog.isShowing())
+                mDialog.dismiss();
+            mDialog = UtilDialog.buildDialog(this, "先去设置页面添加属性吧", "知道了", null, null, null, null);
         }
     }
 

@@ -3,7 +3,6 @@ package com.timer.jike.timemanager.activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 
@@ -47,11 +46,10 @@ public class MyStaticActivity extends AppCompatActivity {
     public static final String TYPE_ALL_HISTORY = "TYPE_ALL_HISTORY";
     private static final String TAG = "MyStaticActivity";
 
-    private static final String[] labels = {"预测性","重要性","类型"};
+    private static final String[] labels = {"预测性", "重要性", "类型"};
 
 
-
-    private int[] mColors = new int[] {
+    private int[] mColors = new int[]{
             ColorTemplate.VORDIPLOM_COLORS[0],
             ColorTemplate.VORDIPLOM_COLORS[1],
             ColorTemplate.VORDIPLOM_COLORS[2],
@@ -88,14 +86,14 @@ public class MyStaticActivity extends AppCompatActivity {
         mPcImportant = (PieChart) findViewById(R.id.pc_msa_important);
         mPcType = (PieChart) findViewById(R.id.pc_msa_type);
 
-        initHalfPieChart(mPcPredict, PROPERTY_TYPE_PREDICTABILITY);
-        initHalfPieChart(mPcImportant, PROPERTY_TYPE_IMPORTANCE);
-        initHalfPieChart(mPcType, PROPERTY_TYPE_TYPE);
+        initPieChart(mPcPredict, PROPERTY_TYPE_PREDICTABILITY);
+        initPieChart(mPcImportant, PROPERTY_TYPE_IMPORTANCE);
+        initPieChart(mPcType, PROPERTY_TYPE_TYPE);
 
 
     }
 
-    private void initHalfPieChart(PieChart pieChart, int propertyType) {
+    private void initPieChart(PieChart pieChart, int propertyType) {
 //        pieChart.setBackgroundColor(Color.WHITE);
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
@@ -113,16 +111,16 @@ public class MyStaticActivity extends AppCompatActivity {
 
         pieChart.setDrawCenterText(true);
 
-        pieChart.setRotationEnabled(false);
+        pieChart.setRotationEnabled(true);
         pieChart.setHighlightPerTapEnabled(true);
 
-        pieChart.setMaxAngle(360f); // HALF CHART
-        pieChart.setRotationAngle(180f);
-        pieChart.setCenterTextOffset(0, -20);
+        pieChart.setMaxAngle(360f); // 180  HALF CHART
+        pieChart.setRotationAngle(0f);
+//        pieChart.setCenterTextOffset(0, -20);
 
 
         // add data
-        setPieChartDatas(TYPE_LAST_WEEK,pieChart, propertyType);
+        setPieChartDatas(TYPE_LAST_WEEK, pieChart, propertyType);
 
 
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
@@ -139,7 +137,7 @@ public class MyStaticActivity extends AppCompatActivity {
         // entry label styling
         pieChart.setEntryLabelColor(Color.WHITE);
 //        mPcPredict.setEntryLabelTypeface(mTfRegular);
-        pieChart.setEntryLabelTextSize(16f);
+        pieChart.setEntryLabelTextSize(12f);
     }
 
     private void setPieChartDatas(String typeDuration, PieChart pieChart, int propertyType) {
@@ -154,7 +152,7 @@ public class MyStaticActivity extends AppCompatActivity {
         int types = list.size();//某种属性有多少类
 
         if (centerText[propertyType] != null)
-            centerText[propertyType].delete(0,centerText[propertyType].length());
+            centerText[propertyType].delete(0, centerText[propertyType].length());
 
         ArrayList<PieEntry> values = new ArrayList<>();
 
@@ -163,9 +161,9 @@ public class MyStaticActivity extends AppCompatActivity {
             List<Event> events = UtilDB.queryEventsBy(typeDuration, property.getId(), propertyType);
             float hours = sumDuration(events);
             values.add(new PieEntry(hours, property.getText()));
-            if (centerText[propertyType] != null){
+            if (centerText[propertyType] != null) {
                 centerText[propertyType].append(property.getText()).append(":")
-                        .append(String.valueOf(hours)).append("h").append("\n");
+                        .append(UtilString.decimalFormat(hours)).append("h").append(i == types - 1 ? "" : "\n");
             }
 
         }
@@ -184,7 +182,7 @@ public class MyStaticActivity extends AppCompatActivity {
         return data;
     }
 
-    private void initCenterTextSB(){
+    private void initCenterTextSB() {
         centerText[0] = new StringBuilder();
         centerText[1] = new StringBuilder();
         centerText[2] = new StringBuilder();
@@ -211,7 +209,6 @@ public class MyStaticActivity extends AppCompatActivity {
         llXAxis.setTextSize(10f);
 
 
-
         YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         leftAxis.setAxisMaximum(24f);
@@ -224,7 +221,7 @@ public class MyStaticActivity extends AppCompatActivity {
         lineChart.getAxisRight().setEnabled(false);
 
         // add data
-        setLineChartDatas(TYPE_LAST_WEEK,lineChart, propertyType);
+        setLineChartDatas(TYPE_LAST_WEEK, lineChart, propertyType);
 
         lineChart.animateX(2500);
         //lcType.invalidate();
@@ -272,19 +269,19 @@ public class MyStaticActivity extends AppCompatActivity {
 
     }
 
-    private void setLineChartDatas(String type, LineChart lineChart,int propertyType){
+    private void setLineChartDatas(String type, LineChart lineChart, int propertyType) {
         setXAxis(lineChart, type);
         LineData data = getLineChartData(propertyType, type);
         lineChart.setData(data);
         lineChart.invalidate();
     }
-    
-    private LineData getLineChartData(int propertyType, String durationType){
+
+    private LineData getLineChartData(int propertyType, String durationType) {
 
         List<? extends BaseProperty> list = UtilDB.getPropertyList(propertyType);
         int types = list.size();//某种属性有多少类
         int count = 7;
-        switch (durationType){
+        switch (durationType) {
             case TYPE_LAST_WEEK:
                 count = 7;
                 break;
@@ -292,10 +289,10 @@ public class MyStaticActivity extends AppCompatActivity {
                 Calendar instance = Calendar.getInstance();
                 instance.setTime(new Date());
                 int month = instance.get(Calendar.MONTH);
-                instance.set(Calendar.MONTH, month -1);
+                instance.set(Calendar.MONTH, month - 1);
                 instance.setTime(instance.getTime());
                 int actualMaximum = instance.getActualMaximum(Calendar.DAY_OF_MONTH);// 此月份的天数
-                Log.d(TAG,"actualMaximum "+ actualMaximum);
+                Log.d(TAG, "actualMaximum " + actualMaximum);
                 count = actualMaximum;
                 break;
             case TYPE_ALL_HISTORY:
@@ -305,7 +302,7 @@ public class MyStaticActivity extends AppCompatActivity {
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
 
         for (int z = 0; z < types; z++) {
-            ArrayList<Entry> values = getEntry(durationType, count, list.get(z).getId(),propertyType);
+            ArrayList<Entry> values = getEntry(durationType, count, list.get(z).getId(), propertyType);
 
             LineDataSet d = new LineDataSet(values, list.get(z).getText());
             d.setLineWidth(2.5f);
@@ -326,14 +323,14 @@ public class MyStaticActivity extends AppCompatActivity {
 
         for (int i = 0; i < count; i++) {
             //get calendar
-            Calendar cal= Calendar.getInstance();
+            Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
             int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
 
-            UtilLog.d(TAG,"thisWeek",cal.toString());
+            UtilLog.d(TAG, "thisWeek", cal.toString());
             int addAmount;
-            switch (type){
+            switch (type) {
                 case TYPE_LAST_WEEK:
                     addAmount = i - dayOfWeek - count + 1;
                     break;
@@ -345,8 +342,8 @@ public class MyStaticActivity extends AppCompatActivity {
                     addAmount = i - dayOfWeek - count + 1;//// TODO: 2017/5/17
                     break;
             }
-            cal.add(Calendar.DATE,addAmount);
-            UtilLog.d(TAG,"LastWeek",cal.toString());
+            cal.add(Calendar.DATE, addAmount);
+            UtilLog.d(TAG, "LastWeek", cal.toString());
 
 
             List<Event> events = UtilDB.queryEventsByDay(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
@@ -355,7 +352,7 @@ public class MyStaticActivity extends AppCompatActivity {
             float hourFloat = sumDuration(events);
             values.add(new Entry(i, hourFloat));
         }
-        
+
         return values;
     }
 
@@ -368,7 +365,7 @@ public class MyStaticActivity extends AppCompatActivity {
     }
 
 
-    private void toggleValues(LineChart chart,boolean isDrawValuesEnable){
+    private void toggleValues(LineChart chart, boolean isDrawValuesEnable) {
         List<ILineDataSet> sets = chart.getData().getDataSets();
 
         for (ILineDataSet iSet : sets) {
@@ -380,10 +377,10 @@ public class MyStaticActivity extends AppCompatActivity {
         chart.invalidate();
     }
 
-    class MyAxisValueFormatter implements IAxisValueFormatter{
+    class MyAxisValueFormatter implements IAxisValueFormatter {
         String typeDuration;
 
-        String[] weekDays = {"星期天","星期一","星期二️","星期三","星期四","星期五","星期六"};
+        String[] weekDays = {"星期天", "星期一", "星期二️", "星期三", "星期四", "星期五", "星期六"};
 
         public MyAxisValueFormatter(String typeDuration) {
             this.typeDuration = typeDuration;
@@ -392,12 +389,12 @@ public class MyStaticActivity extends AppCompatActivity {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            int day = (int)value;
-            switch (typeDuration){
+            int day = (int) value;
+            switch (typeDuration) {
                 case TYPE_LAST_WEEK:
                     return weekDays[day];
                 case TYPE_LAST_MONTH:
-                    return  day+1+"日";
+                    return day + 1 + "日";
                 case TYPE_ALL_HISTORY:
                     break;
             }

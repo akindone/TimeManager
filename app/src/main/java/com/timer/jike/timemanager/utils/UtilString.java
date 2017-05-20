@@ -99,4 +99,11 @@ public class UtilString {
     public static boolean isValidUserName(String string) {
         return !TextUtils.isEmpty(string);
     }
+
+    private static DecimalFormat mDecimalFormat;
+    public static String decimalFormat(double d){
+        if (mDecimalFormat==null)
+            mDecimalFormat = new DecimalFormat("0.00");//10->10.00
+        return mDecimalFormat.format(d);
+    }
 }
